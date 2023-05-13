@@ -1,0 +1,14 @@
+name: GaldreenBlocksUnlimited
+version: '1.0-SNAPSHOT'
+main: de.ewu2000.galdreenblocksunlimited.GaldreenBlocksUnlimited
+api-version: 1.19
+description: Adds custom Blocks
+commands:
+  CreateGaldreenBlock:
+    description: Creates a Galdreen Block
+    usage: /createGaldreenBlock
+    permission: op
+  GiveAllGaldreenBlocks:
+    description: Gives the executing Player all of the GaldreenBlocks
+    usage: /giveAllGaldreenBlocks
+    permission: op

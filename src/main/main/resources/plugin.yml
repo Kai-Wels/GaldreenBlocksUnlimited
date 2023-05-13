@@ -1,0 +1,16 @@
+name: GaldreenBlocks
+version: '${project.version}'
+main: de.ewu2000.galdreenblocks.GaldreenBlocks
+api-version: 1.17
+authors: [ ewU2000 ]
+description: for 1.17.1 Update Restructured GaldreenBlocks Plugin
+website: http://galdreen.de
+commands:
+  GaldreenBlocksGive:
+    description: Gives all Blocks, that are effected by the GaldreenBlocksPlugin (Usefull to setup custom crafting recipies)
+    usage: /gbg
+    permission: op
+  #TestCommand:
+  #  description: tests
+  #  usage: /test
+  #  permission: op

@@ -1,0 +1,36 @@
+package de.ewu2000.galdreenblocksunlimited;
+
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+
+public class CustomBlockCompound {
+
+    private ArrayList<CustomBlockCycle> blockCyclesList;
+    private ItemStack itemToUse;
+    public CustomBlockCompound(ArrayList<CustomBlockCycle> blockCycles, ItemStack itemToUse){
+        this.blockCyclesList = blockCycles;
+        this.itemToUse = itemToUse;
+    }
+
+    public CustomBlockCompound(ItemStack itemToUse){
+        this.itemToUse = itemToUse;
+        this.blockCyclesList = new ArrayList<>();
+    }
+
+    public ArrayList<CustomBlockCycle> getBlockCyclesList() {
+        return blockCyclesList;
+    }
+
+    public void setBlockCyclesList(ArrayList<CustomBlockCycle> blockCyclesList) {
+        this.blockCyclesList = blockCyclesList;
+    }
+
+    public ItemStack getItemToUse() {
+        return itemToUse;
+    }
+
+    public void setItemToUse(ItemStack itemToUse) {
+        this.itemToUse = itemToUse;
+    }
+}
