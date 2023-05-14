@@ -1,8 +1,9 @@
 package de.ewu2000.galdreenblocksunlimited;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CustomBlockCycle {
+public class CustomBlockCycle implements Serializable {
     private ArrayList<CustomBlock> customBlocks;
 
     public CustomBlockCycle(ArrayList<CustomBlock> blockCycle){

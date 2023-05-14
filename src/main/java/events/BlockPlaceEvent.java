@@ -14,11 +14,10 @@ public class BlockPlaceEvent implements Listener {
     @EventHandler
     public void onPlace(org.bukkit.event.block.BlockPlaceEvent event){
         for(CustomBlockCompound cbcmp : GaldreenBlocksUnlimited.allCustomBlockCompounds){
-            if (itemStacksEqual(event.getPlayer().getInventory().getItemInHand(),cbcmp.getItemToUse())) {
+            if (itemStacksEqual(event.getPlayer().getInventory().getItem(event.getHand()),cbcmp.getItemToUse())) {
                 for (CustomBlockCycle cbc : cbcmp.getBlockCyclesList()){
                     for (CustomBlock cb : cbc.getCustomBlocks()){
                         for (BlockData bd : cb.getPlaceData()){
-                            System.out.println(bd.getMaterial());
                             if (bd.getMaterial() == Material.DIAMOND_BLOCK || event.getBlockPlaced().getBlockData().equals(bd)){
                                 event.getBlockPlaced().setBlockData(cb.getGoalData(),false);
                                 return;
@@ -30,7 +29,7 @@ public class BlockPlaceEvent implements Listener {
         }
     }
 
-    private boolean itemStacksEqual(ItemStack is1,ItemStack is2){
+    public static boolean itemStacksEqual(ItemStack is1,ItemStack is2){
         ItemStack isc1 = is1.clone();
         ItemStack isc2 = is2.clone();
         isc1.setAmount(1);

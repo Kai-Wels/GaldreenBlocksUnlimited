@@ -3,9 +3,10 @@ package de.ewu2000.galdreenblocksunlimited;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CustomBlock {
+public class CustomBlock implements Serializable {
     private BlockData goalData;
     private ArrayList<BlockData> placeData;
 
@@ -33,5 +34,13 @@ public class CustomBlock {
 
     public void setPlaceData(ArrayList<BlockData> placeData) {
         this.placeData = placeData;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomBlock{" +
+                "goalData=" + goalData.getAsString() +
+                ", placeData=" + placeData.toString() +
+                '}';
     }
 }

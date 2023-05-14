@@ -2,9 +2,10 @@ package de.ewu2000.galdreenblocksunlimited;
 
 import org.bukkit.inventory.ItemStack;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CustomBlockCompound {
+public class CustomBlockCompound implements Serializable {
 
     private ArrayList<CustomBlockCycle> blockCyclesList;
     private ItemStack itemToUse;
@@ -15,6 +16,11 @@ public class CustomBlockCompound {
 
     public CustomBlockCompound(ItemStack itemToUse){
         this.itemToUse = itemToUse;
+        this.blockCyclesList = new ArrayList<>();
+    }
+
+    public CustomBlockCompound(){
+        this.itemToUse = null;
         this.blockCyclesList = new ArrayList<>();
     }
 

@@ -8,6 +8,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.*;
 import java.util.ArrayList;
 
 public class CreateGaldreenBlockCommand implements CommandExecutor {
@@ -55,19 +57,15 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
 
                 CustomBlockCompound cbcmp = new CustomBlockCompound(is);
                 Location cycleLocation = startLocation.clone();
-                System.out.println("1.");
                 while (cycleLocation.getBlock().getType() != Material.AIR) {
                     CustomBlockCycle cbc = new CustomBlockCycle();
-                    System.out.println("  2.");
                     Location inCycleLocation = cycleLocation.clone();
                     while (inCycleLocation.getBlock().getType() != Material.AIR) {
                         CustomBlock cb = new CustomBlock(inCycleLocation.getBlock().getBlockData());
-                        System.out.println("    3.");
                         Location inBlockDataLocation = inCycleLocation.clone();
                         inBlockDataLocation.add(2, 0, 0);
                         while (inBlockDataLocation.getBlock().getType() != Material.AIR) {
                             cb.getPlaceData().add(inBlockDataLocation.getBlock().getBlockData());
-                            System.out.println("      4.");
                             inBlockDataLocation.add(2,0,0);
                         }
                         cbc.getCustomBlocks().add(cb);
@@ -77,11 +75,84 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
                     cbcmp.getBlockCyclesList().add(cbc);
                     cycleLocation.add(0, 0, 2);
                 }
+
+
+
                 GaldreenBlocksUnlimited.allCustomBlockCompounds.add(cbcmp);
+
+                //write to file
+                File compFolder = new File(GaldreenBlocksUnlimited.dataFolder.getPath() + "/customBlocks/" + itemName);
+                compFolder.mkdir();
+
+                File itemstackFile = new File(compFolder.getPath() + "/item.txt");
+                try{
+                    itemstackFile.createNewFile();
+                    FileOutputStream oS = new FileOutputStream(itemstackFile);
+                    oS.write(cbcmp.getItemToUse().serializeAsBytes());
+                    oS.close();
+                } catch (FileNotFoundException e){
+                    e.printStackTrace();
+                    return false;
+                } catch  (IOException e){
+                    e.printStackTrace();
+                    return false;
+                }
+
+                int cycleCount= 0;
+                for (CustomBlockCycle cbc: cbcmp.getBlockCyclesList()){
+                    File cycleFolder = new File(compFolder.getPath() + "/Cycle" +cycleCount);
+                    cycleFolder.mkdir();
+
+
+
+                    int blockCount = 0;
+                    for(CustomBlock cb: cbc.getCustomBlocks()){
+                        File blockFolder = new File(cycleFolder.getPath() + "/Block" + blockCount);
+                        blockFolder.mkdir();
+
+                        File goalBlockData = new File(blockFolder.getPath() + "/goal.txt");
+                        try {
+                            goalBlockData.createNewFile();
+                            FileWriter fileWriter = new FileWriter(goalBlockData.getPath());
+                            fileWriter.write(cb.getGoalData().getAsString());
+                            fileWriter.close();
+
+                        }catch (IOException e){
+                            e.printStackTrace();
+                            return false;
+                        }
+                        int placeCount = 0;
+                        for(BlockData bd : cb.getPlaceData()){
+                            File placeBlockData = new File(blockFolder.getPath() + "/place" + placeCount + ".txt");
+                            try {
+                                placeBlockData.createNewFile();
+                                FileWriter fileWriter = new FileWriter(placeBlockData.getPath());
+                                fileWriter.write(bd.getAsString());
+                                fileWriter.close();
+
+                            }catch (IOException e){
+                                e.printStackTrace();
+                                return false;
+                            }
+                            placeCount++;
+                        }
+
+                        blockCount++;
+                    }
+
+
+                    cycleCount++;
+                }
+
+
 
             }
 
         }
+
+
+
+
         return false;
     }
 }
