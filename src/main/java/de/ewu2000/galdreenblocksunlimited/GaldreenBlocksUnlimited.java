@@ -61,8 +61,10 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                     for (File subsubFolder : subfolder.listFiles()) {
                         if (subsubFolder.isDirectory()) {
                             CustomBlockCycle cbc = new CustomBlockCycle();
+                            CustomBlock[] blocks = new CustomBlock[subsubFolder.listFiles().length];
                             //for every CustomBlock
                             for (File blockFolder : subsubFolder.listFiles()) {
+                                int cbIndex = Integer.parseInt(blockFolder.getName().substring(5, blockFolder.getName().length()));
                                 CustomBlock cb = new CustomBlock(getServer().createBlockData("minecraft:air"));
                                 BlockData[] placeBlocks = new BlockData[blockFolder.listFiles().length - 1];
                                 //for every Blockdata of a CustomBlock
@@ -76,6 +78,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                                             while ((cont = is.read()) != -1) {
                                                 bdString += (char) cont;
                                             }
+                                            is.close();
                                             cb = new CustomBlock(getServer().createBlockData(bdString));
                                         } catch (FileNotFoundException e) {
                                             e.printStackTrace();
@@ -94,12 +97,14 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
 
                                         try {
                                             int index = Integer.parseInt(blockFile.getName().substring(5, blockFile.getName().length() - 4));
+                                            this.logger.info("Index: " + index);
                                             InputStream is = new FileInputStream(blockFile);
                                             String bdString = "";
                                             int cont;
                                             while ((cont = is.read()) != -1) {
                                                 bdString += (char) cont;
                                             }
+                                            is.close();
                                             placeBlocks[index] = getServer().createBlockData(bdString);
                                         } catch (FileNotFoundException e) {
                                             e.printStackTrace();
@@ -119,15 +124,19 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                                         }
                                     }
                                 }
+
                                 cb.setPlaceData(new ArrayList<>(Arrays.asList(placeBlocks)));
-                                cbc.getCustomBlocks().add(cb);
+                                blocks[cbIndex] = cb;
+
                             }
+                            cbc.setCustomBlocks(new ArrayList<>(Arrays.asList(blocks)));
                             cbcmp.getBlockCyclesList().add(cbc);
 
                         } else if (subsubFolder.getName().equals("item.txt")) {
                             try {
                                 InputStream is = new FileInputStream(subsubFolder);
                                 byte[] cont = is.readAllBytes();
+                                is.close();
                                 ItemStack itemToUse = ItemStack.deserializeBytes(cont);
                                 cbcmp.setItemToUse(itemToUse);
                             } catch (FileNotFoundException e) {
@@ -153,6 +162,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                     try {
                         InputStream is = new FileInputStream(placeableFile);
                         byte[] cont = is.readAllBytes();
+                        is.close();
                         ItemStack itemToPlace = ItemStack.deserializeBytes(cont);
                         BlockCanBuildEvent.alwaysPlaceable.add(itemToPlace);
                     } catch (FileNotFoundException e) {
