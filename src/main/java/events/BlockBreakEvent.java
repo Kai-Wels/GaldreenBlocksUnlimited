@@ -8,11 +8,12 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 public class BlockBreakEvent implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBreak(org.bukkit.event.block.BlockBreakEvent event){
         if (event.getPlayer().getGameMode() != GameMode.CREATIVE){
             for(CustomBlockCompound cbcmp : GaldreenBlocksUnlimited.allCustomBlockCompounds){

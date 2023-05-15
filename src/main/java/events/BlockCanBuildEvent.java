@@ -4,6 +4,7 @@ import de.ewu2000.galdreenblocksunlimited.CustomBlockCompound;
 import de.ewu2000.galdreenblocksunlimited.GaldreenBlocksUnlimited;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 
 public class BlockCanBuildEvent implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBuild(org.bukkit.event.block.BlockCanBuildEvent event){
 
 

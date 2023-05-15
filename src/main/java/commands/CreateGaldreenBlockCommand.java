@@ -6,6 +6,7 @@ import de.ewu2000.galdreenblocksunlimited.CustomBlockCycle;
 import de.ewu2000.galdreenblocksunlimited.GaldreenBlocksUnlimited;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import org.apache.maven.model.Plugin;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
@@ -15,6 +16,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.FileUtil;
+import org.codehaus.plexus.util.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -24,14 +27,14 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        // /createGaldreenBlock x y z name
+        // /createGaldreenBlock x y z bool name
 
         //Layout
         if (commandSender instanceof Player && ((Player) commandSender).getInventory().getItemInMainHand().getType() != Material.AIR) {
-            if (args.length >= 4) {
+            if (args.length >= 5) {
                 //read item name
                 String itemName = "";
-                for (int i = 3; i < args.length; i++) {
+                for (int i = 4; i < args.length; i++) {
                     itemName += args[i];
                     if (i != args.length - 1) {
                         itemName += " ";
@@ -46,13 +49,20 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
 
                 //create Itemstack
                 ItemStack is = ((Player) commandSender).getInventory().getItemInMainHand().clone();
-                ItemMeta im = is.getItemMeta();
-                im.displayName(Component.newline().content(itemName));
-                is.setAmount(1);
-                ArrayList<String> lore = new ArrayList<>();
-                lore.add("Galdreen Block");
-                im.setLore(lore);
-                is.setItemMeta(im);
+                if(args[3].equals("True")){
+                    ItemMeta im = is.getItemMeta();
+                    im.displayName(Component.newline().content(itemName));
+                    is.setAmount(1);
+                    ArrayList<String> lore = new ArrayList<>();
+                    lore.add("Galdreen Block");
+                    im.setLore(lore);
+                    is.setItemMeta(im);
+                }else if (!args[3].equals("False")){
+                    ((Player) commandSender).sendMessage("Error in boolean!");
+                    return false;
+                }
+
+
 
 
                 CustomBlockCompound cbcmp = new CustomBlockCompound(is);
@@ -82,6 +92,13 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
 
                 //write to file
                 File compFolder = new File(GaldreenBlocksUnlimited.dataFolder.getPath() + "/customBlocks/" + itemName);
+                try{
+                    if(compFolder.exists()){
+                        FileUtils.deleteDirectory(compFolder);
+                    }
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
                 compFolder.mkdir();
 
                 File itemstackFile = new File(compFolder.getPath() + "/item.txt");

@@ -7,12 +7,13 @@ import de.ewu2000.galdreenblocksunlimited.GaldreenBlocksUnlimited;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 
 public class BlockDestroyEvent implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDestroy(com.destroystokyo.paper.event.block.BlockDestroyEvent event){
         for(CustomBlockCompound cbcmp : GaldreenBlocksUnlimited.allCustomBlockCompounds){
             for (CustomBlockCycle cbc : cbcmp.getBlockCyclesList()){

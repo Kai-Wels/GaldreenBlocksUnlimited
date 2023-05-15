@@ -7,12 +7,13 @@ import de.ewu2000.galdreenblocksunlimited.GaldreenBlocksUnlimited;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 
 public class PlayerInteractEvent implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInteract(org.bukkit.event.player.PlayerInteractEvent event){
         if ( event.getAction().isRightClick() && event.getClickedBlock() != null && !event.getPlayer().isSneaking()){
             if (event.useInteractedBlock() != Event.Result.DENY){ //Not denied by plot plugin

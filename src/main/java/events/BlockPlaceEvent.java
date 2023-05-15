@@ -7,11 +7,12 @@ import de.ewu2000.galdreenblocksunlimited.GaldreenBlocksUnlimited;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 public class BlockPlaceEvent implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlace(org.bukkit.event.block.BlockPlaceEvent event){
         for(CustomBlockCompound cbcmp : GaldreenBlocksUnlimited.allCustomBlockCompounds){
             if (itemStacksEqual(event.getPlayer().getInventory().getItem(event.getHand()),cbcmp.getItemToUse())) {
