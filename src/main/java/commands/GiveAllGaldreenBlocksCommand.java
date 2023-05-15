@@ -15,10 +15,11 @@ public class GiveAllGaldreenBlocksCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (commandSender instanceof Player){
-            if (((Player)commandSender).getGameMode() == GameMode.CREATIVE){
+            if (((Player)commandSender).getGameMode() == GameMode.CREATIVE || ((Player)commandSender).isOp()){
                 for(CustomBlockCompound cbcmp: GaldreenBlocksUnlimited.allCustomBlockCompounds) {
                     ((Player) commandSender).getInventory().addItem(cbcmp.getItemToUse());
                 }
+                return true;
             }
         }
         return false;

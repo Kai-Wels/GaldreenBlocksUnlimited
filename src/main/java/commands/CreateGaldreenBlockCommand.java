@@ -161,7 +161,7 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
                     cycleCount++;
                 }
 
-
+                return true;
 
             }
 

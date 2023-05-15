@@ -32,6 +32,7 @@ public class AddPlaceable implements CommandExecutor {
                 FileOutputStream oS = new FileOutputStream(itemstackFile);
                 oS.write(itemInhand.serializeAsBytes());
                 oS.close();
+                return true;
             } catch (FileNotFoundException e){
                 e.printStackTrace();
                 return false;
