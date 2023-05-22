@@ -6,12 +6,13 @@ description: Adds custom Blocks
 commands:
   CreateGaldreenBlock:
     description: Creates a Galdreen Block
-    usage: /createGaldreenBlock <Coord-X> <Coord-Y> <Coord-Z> <useNameBool> <Name> <Hold Material in hand>
+    usage: /createGaldreenBlock <Coord-X> <Coord-Y> <Coord-Z> <useNameBool> <Name> !!Hold Material in hand!!
     permission: op
   GiveAllGaldreenBlocks:
     description: Gives the executing Player all of the GaldreenBlocks
     usage: /giveAllGaldreenBlocks
   AddPlaceable:
-    description: Adds a block to the lsit of blocks that can be placed in non vanilla locations.
-    usage: /addPlaceable <Hold Item in hand>
+    description: Adds a block to the list of blocks that can be placed in non vanilla locations.
+    usage: /addPlaceable !!Hold Item in hand!!
     permission: op
+depend: [WorldGuard]

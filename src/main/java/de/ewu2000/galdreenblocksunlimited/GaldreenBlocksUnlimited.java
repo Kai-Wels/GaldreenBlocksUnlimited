@@ -1,5 +1,9 @@
 package de.ewu2000.galdreenblocksunlimited;
 
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import commands.AddPlaceable;
 import commands.CreateGaldreenBlockCommand;
 import commands.GiveAllGaldreenBlocksCommand;
@@ -17,7 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class GaldreenBlocksUnlimited extends JavaPlugin {
-
+    public static StateFlag galdreenBlockInteractFlag;
     public static ArrayList<CustomBlockCompound> allCustomBlockCompounds = new ArrayList<>();
     public static File dataFolder;
     @Override
@@ -54,7 +58,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
 
             //for every CustomBlock Compound
             for (File subfolder : blockMainFolder.listFiles()) {
-                this.logger.info("Loading CutomBlockCompound: " + subfolder.getName());
+                this.logger.info("  - " + subfolder.getName());
                 if (subfolder.isDirectory()) {
                     CustomBlockCompound cbcmp = new CustomBlockCompound();
                     //for every CustomBlockCyle
@@ -97,7 +101,6 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
 
                                         try {
                                             int index = Integer.parseInt(blockFile.getName().substring(5, blockFile.getName().length() - 4));
-                                            this.logger.info("Index: " + index);
                                             InputStream is = new FileInputStream(blockFile);
                                             String bdString = "";
                                             int cont;
@@ -165,6 +168,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                         is.close();
                         ItemStack itemToPlace = ItemStack.deserializeBytes(cont);
                         BlockCanBuildEvent.alwaysPlaceable.add(itemToPlace);
+                        this.logger.info("  - " + itemToPlace.getType() + "  [" + placeableFile.getName()  + "]");
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                         return;

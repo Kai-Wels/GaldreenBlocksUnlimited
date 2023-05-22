@@ -64,26 +64,30 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
 
 
 
-
+                int stop = 0;
+                int maxStop = 300;
                 CustomBlockCompound cbcmp = new CustomBlockCompound(is);
                 Location cycleLocation = startLocation.clone();
-                while (cycleLocation.getBlock().getType() != Material.AIR) {
+                while (cycleLocation.getBlock().getType() != Material.AIR && stop < maxStop) {
                     CustomBlockCycle cbc = new CustomBlockCycle();
                     Location inCycleLocation = cycleLocation.clone();
-                    while (inCycleLocation.getBlock().getType() != Material.AIR) {
+                    while (inCycleLocation.getBlock().getType() != Material.AIR  && stop < maxStop) {
                         CustomBlock cb = new CustomBlock(inCycleLocation.getBlock().getBlockData());
                         Location inBlockDataLocation = inCycleLocation.clone();
                         inBlockDataLocation.add(2, 0, 0);
-                        while (inBlockDataLocation.getBlock().getType() != Material.AIR) {
+                        while (inBlockDataLocation.getBlock().getType() != Material.AIR  && stop < maxStop) {
                             cb.getPlaceData().add(inBlockDataLocation.getBlock().getBlockData());
                             inBlockDataLocation.add(2,0,0);
+                            stop++;
                         }
                         cbc.getCustomBlocks().add(cb);
                         inCycleLocation.add(0, 2, 0);
                         System.out.println(inCycleLocation.toString());
+                        stop++;
                     }
                     cbcmp.getBlockCyclesList().add(cbc);
                     cycleLocation.add(0, 0, 2);
+                    stop++;
                 }
 
 
