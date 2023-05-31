@@ -8,7 +8,7 @@
 ## Features
     - Customblocks, which can be configured based on orientation and can contain multiple cycles, which players can switch through.
         
-    <img src="./Doc/PlaceBank.gif"/>   
+<img src="./Doc/PlaceBank.gif"/>   
 
     - Abillity to make any block placeable on any block.
 
