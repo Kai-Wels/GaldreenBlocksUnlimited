@@ -1,0 +1,41 @@
+package commands;
+
+import de.ewu2000.galdreenblocksunlimited.GaldreenBlocksUnlimited;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class AddTool implements CommandExecutor {
+
+    public static ItemStack tool = null;
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        ItemStack itemInhand = ((Player)sender).getInventory().getItemInMainHand();
+        tool = itemInhand;
+
+        //write to file
+        File itemstackFile = new File(GaldreenBlocksUnlimited.dataFolder.getPath() + "/tools/changeTool.txt");
+        try{
+            itemstackFile.createNewFile();
+            FileOutputStream oS = new FileOutputStream(itemstackFile);
+            oS.write(itemInhand.serializeAsBytes());
+            oS.close();
+            return true;
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+            return false;
+        } catch  (IOException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+}

@@ -12,6 +12,8 @@ import java.util.ArrayList;
 
 public class BlockCanBuildEvent implements Listener {
 
+    public static ArrayList<ItemStack> alwaysPlaceable = new ArrayList<>();
+
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBuild(org.bukkit.event.block.BlockCanBuildEvent event){
 
@@ -32,6 +34,5 @@ public class BlockCanBuildEvent implements Listener {
 
     }
 
-    public static ArrayList<ItemStack> alwaysPlaceable = new ArrayList<>();
 
 }

@@ -1,6 +1,8 @@
+commands\AddTool.class
 events\BlockBreakEvent.class
 de\ewu2000\galdreenblocksunlimited\CustomBlockCycle.class
 commands\AddPlaceable.class
+commands\GiveGaldreenTool.class
 de\ewu2000\galdreenblocksunlimited\CustomBlockCompound.class
 events\BlockPlaceEvent.class
 events\PlayerInteractEvent.class

@@ -15,4 +15,12 @@ commands:
     description: Adds a block to the list of blocks that can be placed in non vanilla locations.
     usage: /addPlaceable !!Hold Item in hand!!
     permission: op
-depend: [WorldGuard]
+  AddTool:
+    description: Changes the tool used for switching GaldreenBlocks to the item in hand.
+    usage: /addTool !!Hold Item in hand!!
+    permission: op
+
+  GiveGaldreenTool:
+    description: Gives the player the tool used to change GaldreenBlocks.
+    usage: /giveGaldreenTool
+depend: [WorldGuard,Towny]

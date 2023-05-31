@@ -4,9 +4,7 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
-import commands.AddPlaceable;
-import commands.CreateGaldreenBlockCommand;
-import commands.GiveAllGaldreenBlocksCommand;
+import commands.*;
 import events.*;
 import org.bukkit.Bukkit;
 import org.bukkit.block.data.BlockData;
@@ -17,11 +15,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public final class GaldreenBlocksUnlimited extends JavaPlugin {
-    public static StateFlag galdreenBlockInteractFlag;
     public static ArrayList<CustomBlockCompound> allCustomBlockCompounds = new ArrayList<>();
     public static File dataFolder;
     @Override
@@ -39,6 +34,8 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
         getCommand("createGaldreenBlock").setExecutor(new CreateGaldreenBlockCommand());
         getCommand("giveAllGaldreenBlocks").setExecutor(new GiveAllGaldreenBlocksCommand());
         getCommand("addPlaceable").setExecutor(new AddPlaceable());
+        getCommand("addTool").setExecutor(new AddTool());
+        getCommand("giveGaldreenTool").setExecutor(new GiveGaldreenTool());
 
 
         dataFolder = this.getDataFolder();
@@ -51,6 +48,10 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
         File placeableFolder = new File(dataFolder.getPath() + "/placeable");
         if (!placeableFolder.exists()) {
             placeableFolder.mkdir();
+        }
+        File toolsFolder = new File(dataFolder.getPath() + "/tools");
+        if (!toolsFolder.exists()) {
+            toolsFolder.mkdir();
         }
         this.logger.info("Loading Blocks");
         {
@@ -169,6 +170,31 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                         ItemStack itemToPlace = ItemStack.deserializeBytes(cont);
                         BlockCanBuildEvent.alwaysPlaceable.add(itemToPlace);
                         this.logger.info("  - " + itemToPlace.getType() + "  [" + placeableFile.getName()  + "]");
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                        return;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return;
+                    } catch (OutOfMemoryError e) {
+                        e.printStackTrace();
+                        return;
+                    }
+                }
+            }
+        }
+
+        this.logger.info("Loading Tools");
+        {
+            for ( File f : toolsFolder.listFiles()){
+                if (f.getName().equals("changeTool.txt")){
+                    try {
+                        InputStream is = new FileInputStream(f);
+                        byte[] cont = is.readAllBytes();
+                        is.close();
+                        ItemStack tool = ItemStack.deserializeBytes(cont);
+                        AddTool.tool = tool;
+                        this.logger.info("  - loaded tool");
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                         return;
