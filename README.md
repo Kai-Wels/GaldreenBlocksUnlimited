@@ -1,9 +1,9 @@
 # GaldreenBlocksUnlimited
 
 ## Description
-This Plugin adds the functionallity to add easy to use custom blocks to your server.'
-In combination with a resourcepack this allows for the addition of extra details to builds.
-This plugin is specificly created for the german server Galdreen, but may also be useful for other servers.
+This Plugin adds the functionality to add easy to use custom blocks to your server.
+In combination with a resourcepack this allows for the addition of extra details to builds in a survival friendly manner.
+This plugin is specifically created for the german server Galdreen, but may also be useful for other servers.
 
 ## Features
 - Customblocks, which can be configured based on orientation and can contain multiple cycles, which players can switch through.
@@ -26,12 +26,11 @@ This plugin is specificly created for the german server Galdreen, but may also b
   *Example of the definition of a custom block. Important to note: Blocks to place are always defined in positive x-direction and seperate cyles are defiend next to each other in positive z-direction. Blocks inside of a cycle are defined in positive y-direction. Between all of these different Blockstates there must be exactly one block. There should be no blocks surrounding the definition pattern. Diamond blocks are used as wildcards and match any placed block.
   This image uses the resourcepack by LordKeks, made for the Galdreen Server.*
 - **GiveAllGaldreenBlocks**
-   This command is executeable by every player, that is in creative mode. It gives this player all of the custom blocks that were defined.
+   This command is executable by every player, that is in creative mode. It gives this player all of the custom blocks that were defined.
   
 - **GiveGaldreenTool**
-    This command is executeable by every player, that is in creative mode. It gives this player the tool that has been defined.
+    This command is executable by every player, that is in creative mode. It gives this player the tool that has been defined.
 
 ## Note
 - This plugin does not work for any situation. For example rails do not properly work as custom blocks, because they break do to not caught updates. Or on other hand buttons are one of the main blocks this plugin was written for, but not every situation is handled. If they are destroyed using a piston or water, they do not drop the custom block.
 - This plugin needs WorldGuard and Towny, as it checks for both of these plugins, whether or not building is allowed.
-- 
