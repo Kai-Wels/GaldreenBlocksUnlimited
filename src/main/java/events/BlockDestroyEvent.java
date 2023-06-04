@@ -9,6 +9,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 
 
 public class BlockDestroyEvent implements Listener {
@@ -26,6 +27,12 @@ public class BlockDestroyEvent implements Listener {
             }
         }
 
+        for( ItemStack item: BlockCanBuildEvent.alwaysPlaceable){
+            if (item.getType().equals(event.getBlock().getType())) {
+                event.setCancelled(true);
+                return;
+            }
+        }
     }
 
 }

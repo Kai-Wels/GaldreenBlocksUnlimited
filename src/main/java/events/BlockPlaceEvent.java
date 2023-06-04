@@ -1,5 +1,6 @@
 package events;
 
+import commands.AddPlaceable;
 import de.ewu2000.galdreenblocksunlimited.CustomBlock;
 import de.ewu2000.galdreenblocksunlimited.CustomBlockCompound;
 import de.ewu2000.galdreenblocksunlimited.CustomBlockCycle;
@@ -19,7 +20,7 @@ public class BlockPlaceEvent implements Listener {
                 for (CustomBlockCycle cbc : cbcmp.getBlockCyclesList()){
                     for (CustomBlock cb : cbc.getCustomBlocks()){
                         for (BlockData bd : cb.getPlaceData()){
-                            if (bd.getMaterial() == Material.DIAMOND_BLOCK || event.getBlockPlaced().getBlockData().equals(bd)){
+                            if (event.getBlockPlaced().getBlockData().equals(bd) || bd.getMaterial() == Material.DIAMOND_BLOCK){
                                 event.getBlockPlaced().setBlockData(cb.getGoalData(),false);
                                 return;
                             }
