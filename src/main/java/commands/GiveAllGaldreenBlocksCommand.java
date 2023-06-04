@@ -3,6 +3,7 @@ package commands;
 import de.ewu2000.galdreenblocksunlimited.CustomBlock;
 import de.ewu2000.galdreenblocksunlimited.CustomBlockCompound;
 import de.ewu2000.galdreenblocksunlimited.GaldreenBlocksUnlimited;
+import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

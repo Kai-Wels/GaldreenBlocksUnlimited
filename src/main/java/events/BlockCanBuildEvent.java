@@ -17,7 +17,6 @@ public class BlockCanBuildEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBuild(org.bukkit.event.block.BlockCanBuildEvent event){
 
-
         ItemStack usedItem = null;
         //get ITem in used Hand
         if (event.getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR){

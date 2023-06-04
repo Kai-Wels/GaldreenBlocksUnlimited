@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CreateGaldreenBlockCommand implements CommandExecutor {
 
@@ -51,11 +52,13 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
                 ItemStack is = ((Player) commandSender).getInventory().getItemInMainHand().clone();
                 if(args[3].equals("True")){
                     ItemMeta im = is.getItemMeta();
-                    im.displayName(Component.newline().content(itemName));
+                    im.displayName(Component.newline().content("§f" + itemName));
                     is.setAmount(1);
                     ArrayList<String> lore = new ArrayList<>();
-                    lore.add("Galdreen Block");
-                    im.setLore(lore);
+                    lore.add("§9" + "Galdreen Block");
+                    ArrayList<Component> loreList = new ArrayList<>();
+                    loreList.add(Component.newline().content("§9" + "Galdreen Block"));
+                    im.lore(loreList);
                     is.setItemMeta(im);
                 }else if (!args[3].equals("False")){
                     ((Player) commandSender).sendMessage("Error in boolean!");
@@ -82,7 +85,6 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
                         }
                         cbc.getCustomBlocks().add(cb);
                         inCycleLocation.add(0, 2, 0);
-                        System.out.println(inCycleLocation.toString());
                         stop++;
                     }
                     cbcmp.getBlockCyclesList().add(cbc);
@@ -165,6 +167,7 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
                     cycleCount++;
                 }
 
+                ((Player)commandSender).sendMessage(Component.newline().content("Block added successfully!"));
                 return true;
 
             }

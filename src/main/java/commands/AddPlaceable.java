@@ -2,6 +2,7 @@ package commands;
 
 import de.ewu2000.galdreenblocksunlimited.GaldreenBlocksUnlimited;
 import events.BlockCanBuildEvent;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,13 +26,15 @@ public class AddPlaceable implements CommandExecutor {
             BlockCanBuildEvent.alwaysPlaceable.add(itemInhand);
 
             int id = (new File(GaldreenBlocksUnlimited.dataFolder.getPath() + "/placeable")).listFiles().length;
+
             //write to file
-            File itemstackFile = new File(GaldreenBlocksUnlimited.dataFolder.getPath() + "/placeable/" + id  + ".txt");
+            File itemstackFile = new File(GaldreenBlocksUnlimited.dataFolder.getPath() + "/placeable/" + itemInhand.getType().toString() + itemInhand.hashCode()  + ".txt");
             try{
                 itemstackFile.createNewFile();
                 FileOutputStream oS = new FileOutputStream(itemstackFile);
                 oS.write(itemInhand.serializeAsBytes());
                 oS.close();
+                ((Player)commandSender).sendMessage(Component.newline().content("Placeable added successfully!"));
                 return true;
             } catch (FileNotFoundException e){
                 e.printStackTrace();
