@@ -1,5 +1,6 @@
 commands\AddTool.class
 events\BlockBreakEvent.class
+events\ReplaceTask.class
 de\ewu2000\galdreenblocksunlimited\CustomBlockCycle.class
 commands\AddPlaceable.class
 commands\GiveGaldreenTool.class

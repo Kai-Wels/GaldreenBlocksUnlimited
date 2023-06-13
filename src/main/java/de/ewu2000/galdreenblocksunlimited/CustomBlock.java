@@ -10,6 +10,7 @@ public class CustomBlock implements Serializable {
     private BlockData goalData;
     private ArrayList<BlockData> placeData;
 
+
     public CustomBlock(BlockData goalData, ArrayList<BlockData> placeData){
         this.goalData = goalData;
         this.placeData = placeData;
@@ -43,4 +44,6 @@ public class CustomBlock implements Serializable {
                 ", placeData=" + placeData.toString() +
                 '}';
     }
+
+
 }

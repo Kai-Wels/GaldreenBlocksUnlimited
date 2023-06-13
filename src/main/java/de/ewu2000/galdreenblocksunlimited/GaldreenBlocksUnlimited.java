@@ -1,14 +1,11 @@
 package de.ewu2000.galdreenblocksunlimited;
 
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.protection.flags.StateFlag;
-import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
-import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import commands.*;
 import events.*;
 import org.bukkit.Bukkit;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,14 +16,15 @@ import java.util.Arrays;
 public final class GaldreenBlocksUnlimited extends JavaPlugin {
     public static ArrayList<CustomBlockCompound> allCustomBlockCompounds = new ArrayList<>();
     public static File dataFolder;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
         this.logger.info("Registering Events");
         PluginManager manager = Bukkit.getPluginManager();
         manager.registerEvents(new BlockDestroyEvent(),this);
-        manager.registerEvents(new BlockPlaceEvent(),this);
-        manager.registerEvents(new BlockBreakEvent(),this);
+        manager.registerEvents(new BlockPlaceEvent(this),this);
+        manager.registerEvents(new BlockBreakEvent(this),this);
         manager.registerEvents(new PlayerInteractEvent(),this);
         manager.registerEvents(new BlockCanBuildEvent(),this);
 
@@ -143,6 +141,12 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                                 is.close();
                                 ItemStack itemToUse = ItemStack.deserializeBytes(cont);
                                 cbcmp.setItemToUse(itemToUse);
+
+                                if(itemToUse.getItemMeta().lore() == null){
+                                    cbcmp.setUpdatedByOtherBlocks(false);
+                                }else{
+                                    cbcmp.setUpdatedByOtherBlocks(true);
+                                }
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
                                 return;

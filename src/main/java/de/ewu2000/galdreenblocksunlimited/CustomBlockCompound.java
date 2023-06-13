@@ -9,6 +9,11 @@ public class CustomBlockCompound implements Serializable {
 
     private ArrayList<CustomBlockCycle> blockCyclesList;
     private ItemStack itemToUse;
+
+
+    private boolean updatedByOtherBlocks;
+
+
     public CustomBlockCompound(ArrayList<CustomBlockCycle> blockCycles, ItemStack itemToUse){
         this.blockCyclesList = blockCycles;
         this.itemToUse = itemToUse;
@@ -38,5 +43,13 @@ public class CustomBlockCompound implements Serializable {
 
     public void setItemToUse(ItemStack itemToUse) {
         this.itemToUse = itemToUse;
+    }
+
+    public boolean isUpdatedByOtherBlocks() {
+        return updatedByOtherBlocks;
+    }
+
+    public void setUpdatedByOtherBlocks(boolean updatedByOtherBlocks) {
+        this.updatedByOtherBlocks = updatedByOtherBlocks;
     }
 }
