@@ -22,11 +22,11 @@ public class GiveGaldreenBlocksCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (commandSender instanceof Player){
             if (((Player)commandSender).getGameMode() == GameMode.CREATIVE || commandSender.isOp()){
-                if (args.length == 1){ //give specific item
+                if (args.length >= 1){ //give specific item
                     PlainTextComponentSerializer serializer = PlainTextComponentSerializer.plainText();
                     for(CustomBlockCompound cbcmp: GaldreenBlocksUnlimited.allCustomBlockCompounds) {
                         if (cbcmp.getItemToUse().getItemMeta().hasDisplayName()) {
-                            if (serializer.serialize(cbcmp.getItemToUse().displayName()).equalsIgnoreCase("[" + args[0] + "]")) { // for some reason there are brackets around the itemname
+                            if (serializer.serialize(cbcmp.getItemToUse().displayName()).equalsIgnoreCase("[" + String.join(" ",args) + "]")) { // for some reason there are brackets around the itemname
                                 ((Player) commandSender).getWorld().dropItem(((Player) commandSender).getLocation(), cbcmp.getItemToUse());
                                 return true;
                             }
@@ -40,8 +40,6 @@ public class GiveGaldreenBlocksCommand implements CommandExecutor {
                         }
                     }
                     return true;
-                }else{
-                    return false;
                 }
             }
         }
