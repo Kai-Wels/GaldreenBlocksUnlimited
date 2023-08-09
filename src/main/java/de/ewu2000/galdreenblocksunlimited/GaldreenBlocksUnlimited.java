@@ -12,6 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 public final class GaldreenBlocksUnlimited extends JavaPlugin {
     public static ArrayList<CustomBlockCompound> allCustomBlockCompounds = new ArrayList<>();
@@ -57,22 +59,30 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
 
 
             //for every CustomBlock Compound
-            for (File subfolder : blockMainFolder.listFiles()) {
+            List<File> subfolderlist = Arrays.asList(blockMainFolder.listFiles());
+            subfolderlist.sort(Comparator.comparing(File::getName));
+            for (File subfolder : subfolderlist) {
                 this.logger.info("  - " + subfolder.getName());
                 if (subfolder.isDirectory()) {
                     CustomBlockCompound cbcmp = new CustomBlockCompound();
                     //for every CustomBlockCyle
-                    for (File subsubFolder : subfolder.listFiles()) {
+                    List<File> subsubfolderlist = Arrays.asList(subfolder.listFiles());
+                    subsubfolderlist.sort(Comparator.comparing(File::getName));
+                    for (File subsubFolder : subsubfolderlist) {
                         if (subsubFolder.isDirectory()) {
                             CustomBlockCycle cbc = new CustomBlockCycle();
                             CustomBlock[] blocks = new CustomBlock[subsubFolder.listFiles().length];
                             //for every CustomBlock
-                            for (File blockFolder : subsubFolder.listFiles()) {
+                            List<File> blockFolderList = Arrays.asList(subsubFolder.listFiles());
+                            blockFolderList.sort(Comparator.comparing(File::getName));
+                            for (File blockFolder : blockFolderList) {
                                 int cbIndex = Integer.parseInt(blockFolder.getName().substring(5, blockFolder.getName().length()));
                                 CustomBlock cb = new CustomBlock(getServer().createBlockData("minecraft:air"));
                                 BlockData[] placeBlocks = new BlockData[blockFolder.listFiles().length - 1];
                                 //for every Blockdata of a CustomBlock
-                                for (File blockFile : blockFolder.listFiles()) {
+                                List<File> blockFileList = Arrays.asList(blockFolder.listFiles());
+                                blockFileList.sort(Comparator.comparing(File::getName));
+                                for (File blockFile : blockFileList) {
 
                                     if (blockFile.isFile() && blockFile.getName().equals("goal.txt")) {
                                         try {
@@ -166,7 +176,9 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
         }
         this.logger.info("Loading Placeables");
         {
-            for (File placeableFile : placeableFolder.listFiles()) {
+            List<File> placeableFilelist = Arrays.asList(placeableFolder.listFiles());
+            placeableFilelist.sort(Comparator.comparing(File::getName));
+            for (File placeableFile : placeableFilelist) {
                 if(placeableFile.isFile()){
                     try {
                         InputStream is = new FileInputStream(placeableFile);
@@ -191,7 +203,9 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
 
         this.logger.info("Loading Tools");
         {
-            for ( File f : toolsFolder.listFiles()){
+            List<File> toolsList = Arrays.asList(toolsFolder.listFiles());
+            toolsList.sort(Comparator.comparing(File::getName));
+            for ( File f : toolsList){
                 if (f.getName().equals("changeTool.txt")){
                     try {
                         InputStream is = new FileInputStream(f);
