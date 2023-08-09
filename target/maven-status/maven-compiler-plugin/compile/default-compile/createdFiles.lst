@@ -3,6 +3,7 @@ events\BlockBreakEvent.class
 events\ReplaceTask.class
 de\ewu2000\galdreenblocksunlimited\CustomBlockCycle.class
 commands\AddPlaceable.class
+commands\TabCompleterGiveGaldreenBlocks.class
 commands\GiveGaldreenTool.class
 de\ewu2000\galdreenblocksunlimited\CustomBlockCompound.class
 events\BlockPlaceEvent.class
@@ -10,6 +11,5 @@ events\PlayerInteractEvent.class
 de\ewu2000\galdreenblocksunlimited\GaldreenBlocksUnlimited.class
 events\BlockCanBuildEvent.class
 commands\CreateGaldreenBlockCommand.class
-commands\GiveAllGaldreenBlocksCommand.class
 de\ewu2000\galdreenblocksunlimited\CustomBlock.class
 events\BlockDestroyEvent.class

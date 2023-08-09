@@ -8,9 +8,9 @@ commands:
     description: Creates a Galdreen Block
     usage: /createGaldreenBlock <Coord-X> <Coord-Y> <Coord-Z> <useNameBool> <Name> !!Hold Material in hand!!
     permission: op
-  GiveAllGaldreenBlocks:
-    description: Gives the executing Player all of the GaldreenBlocks
-    usage: /giveAllGaldreenBlocks
+  GiveGaldreenBlocks:
+    description: Gives the executing Player the mentioned GaldreenBlock or drops all of them
+    usage: /giveGaldreenBlocks <optional:Name>
   AddPlaceable:
     description: Adds a block to the list of blocks that can be placed in non vanilla locations.
     usage: /addPlaceable !!Hold Item in hand!!

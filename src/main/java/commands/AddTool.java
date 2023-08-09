@@ -23,7 +23,6 @@ public class AddTool implements CommandExecutor {
         if (sender instanceof Player){
             ItemStack itemInhand = ((Player)sender).getInventory().getItemInMainHand();
             tool = itemInhand;
-
             //write to file
             File itemstackFile = new File(GaldreenBlocksUnlimited.dataFolder.getPath() + "/tools/changeTool.txt");
             try{

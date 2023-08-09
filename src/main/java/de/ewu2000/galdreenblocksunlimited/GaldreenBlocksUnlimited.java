@@ -30,7 +30,8 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
 
         this.logger.info("Registering Commands");
         getCommand("createGaldreenBlock").setExecutor(new CreateGaldreenBlockCommand());
-        getCommand("giveAllGaldreenBlocks").setExecutor(new GiveAllGaldreenBlocksCommand());
+        getCommand("giveGaldreenBlocks").setExecutor(new GiveGaldreenBlocksCommand());
+        getCommand("giveGaldreenBlocks").setTabCompleter(new TabCompleterGiveGaldreenBlocks());
         getCommand("addPlaceable").setExecutor(new AddPlaceable());
         getCommand("addTool").setExecutor(new AddTool());
         getCommand("giveGaldreenTool").setExecutor(new GiveGaldreenTool());
