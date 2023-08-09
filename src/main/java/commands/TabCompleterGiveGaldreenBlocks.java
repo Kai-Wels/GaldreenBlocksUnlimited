@@ -2,6 +2,7 @@ package commands;
 
 import de.ewu2000.galdreenblocksunlimited.CustomBlockCompound;
 import de.ewu2000.galdreenblocksunlimited.GaldreenBlocksUnlimited;
+import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -22,8 +23,11 @@ public class TabCompleterGiveGaldreenBlocks implements TabCompleter {
         if(sender instanceof Player){
             PlainTextComponentSerializer serializer = PlainTextComponentSerializer.plainText();
             for(CustomBlockCompound cbcmp: GaldreenBlocksUnlimited.allCustomBlockCompounds) {
-                String name = serializer.serialize(cbcmp.getItemToUse().displayName());
-                suggestions.add(name.substring(1,name.length() - 1));
+                if (cbcmp.getItemToUse().getItemMeta().hasDisplayName()){
+                    String name = serializer.serialize(cbcmp.getItemToUse().displayName());
+                    suggestions.add(name.substring(1,name.length() - 1));
+
+                }
             }
         }
         return suggestions;

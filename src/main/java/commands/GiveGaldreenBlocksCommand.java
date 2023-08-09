@@ -25,15 +25,19 @@ public class GiveGaldreenBlocksCommand implements CommandExecutor {
                 if (args.length == 1){ //give specific item
                     PlainTextComponentSerializer serializer = PlainTextComponentSerializer.plainText();
                     for(CustomBlockCompound cbcmp: GaldreenBlocksUnlimited.allCustomBlockCompounds) {
-                        if (serializer.serialize(cbcmp.getItemToUse().displayName()).equalsIgnoreCase("[" + args[0] + "]")) { // for some reason there are brackets around the itemname
-                            ((Player) commandSender).getWorld().dropItem(((Player) commandSender).getLocation(), cbcmp.getItemToUse());
-                            return true;
+                        if (cbcmp.getItemToUse().getItemMeta().hasDisplayName()) {
+                            if (serializer.serialize(cbcmp.getItemToUse().displayName()).equalsIgnoreCase("[" + args[0] + "]")) { // for some reason there are brackets around the itemname
+                                ((Player) commandSender).getWorld().dropItem(((Player) commandSender).getLocation(), cbcmp.getItemToUse());
+                                return true;
+                            }
                         }
                     }
                     return false;
                 }else if (args.length == 0){ //drop all items
                     for(CustomBlockCompound cbcmp: GaldreenBlocksUnlimited.allCustomBlockCompounds) {
-                        ((Player) commandSender).getWorld().dropItem(((Player) commandSender).getLocation(), cbcmp.getItemToUse());
+                        if (cbcmp.getItemToUse().getItemMeta().hasDisplayName()){
+                            ((Player) commandSender).getWorld().dropItem(((Player) commandSender).getLocation(), cbcmp.getItemToUse());
+                        }
                     }
                     return true;
                 }else{
