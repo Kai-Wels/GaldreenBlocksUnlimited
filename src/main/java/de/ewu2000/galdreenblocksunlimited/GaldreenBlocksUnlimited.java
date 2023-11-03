@@ -22,7 +22,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        this.logger.info("Registering Events");
+        this.getLogger().info("Registering Events");
         PluginManager manager = Bukkit.getPluginManager();
         manager.registerEvents(new BlockDestroyEvent(),this);
         manager.registerEvents(new BlockPlaceEvent(this),this);
@@ -30,7 +30,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
         manager.registerEvents(new PlayerInteractEvent(),this);
         manager.registerEvents(new BlockCanBuildEvent(),this);
 
-        this.logger.info("Registering Commands");
+        this.getLogger().info("Registering Commands");
         getCommand("createGaldreenBlock").setExecutor(new CreateGaldreenBlockCommand());
         getCommand("giveGaldreenBlocks").setExecutor(new GiveGaldreenBlocksCommand());
         getCommand("giveGaldreenBlocks").setTabCompleter(new TabCompleterGiveGaldreenBlocks());
@@ -54,7 +54,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
         if (!toolsFolder.exists()) {
             toolsFolder.mkdir();
         }
-        this.logger.info("Loading Blocks");
+        this.getLogger().info("Loading Blocks");
         {
 
 
@@ -62,7 +62,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
             List<File> subfolderlist = Arrays.asList(blockMainFolder.listFiles());
             subfolderlist.sort(Comparator.comparing(File::getName));
             for (File subfolder : subfolderlist) {
-                this.logger.info("  - " + subfolder.getName());
+                this.getLogger().info("  - " + subfolder.getName());
                 if (subfolder.isDirectory()) {
                     CustomBlockCompound cbcmp = new CustomBlockCompound();
                     //for every CustomBlockCyle
@@ -174,7 +174,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                 }
             }
         }
-        this.logger.info("Loading Placeables");
+        this.getLogger().info("Loading Placeables");
         {
             List<File> placeableFilelist = Arrays.asList(placeableFolder.listFiles());
             placeableFilelist.sort(Comparator.comparing(File::getName));
@@ -186,7 +186,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                         is.close();
                         ItemStack itemToPlace = ItemStack.deserializeBytes(cont);
                         BlockCanBuildEvent.alwaysPlaceable.add(itemToPlace);
-                        this.logger.info("  - " + itemToPlace.getType() + "  [" + placeableFile.getName()  + "]");
+                        this.getLogger().info("  - " + itemToPlace.getType() + "  [" + placeableFile.getName()  + "]");
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                         return;
@@ -201,7 +201,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
             }
         }
 
-        this.logger.info("Loading Tools");
+        this.getLogger().info("Loading Tools");
         {
             List<File> toolsList = Arrays.asList(toolsFolder.listFiles());
             toolsList.sort(Comparator.comparing(File::getName));
@@ -213,7 +213,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                         is.close();
                         ItemStack tool = ItemStack.deserializeBytes(cont);
                         AddTool.tool = tool;
-                        this.logger.info("  - loaded tool");
+                        this.getLogger().info("  - loaded tool");
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                         return;
