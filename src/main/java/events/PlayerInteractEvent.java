@@ -12,6 +12,7 @@ import de.ewu2000.galdreenblocksunlimited.CustomBlock;
 import de.ewu2000.galdreenblocksunlimited.CustomBlockCompound;
 import de.ewu2000.galdreenblocksunlimited.CustomBlockCycle;
 import de.ewu2000.galdreenblocksunlimited.GaldreenBlocksUnlimited;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -22,7 +23,7 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 public class PlayerInteractEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onInteract(org.bukkit.event.player.PlayerInteractEvent event){
+    public void onInteract(org.bukkit.event.player.PlayerInteractEvent event) {
 
         //check if worldguard regions allow for building.
         RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
@@ -34,36 +35,26 @@ public class PlayerInteractEvent implements Listener {
         //check if towny allows building for this player
         boolean bBuild = PlayerCacheUtil.getCachePermission(event.getPlayer(), event.getClickedBlock().getLocation(), event.getClickedBlock().getType(), TownyPermission.ActionType.BUILD);
 
-        if ((wgResult && bBuild) ||canBypass) {
-            if (event.getPlayer().getInventory().getItemInMainHand().isSimilar(AddTool.tool)){
-                if (event.getAction().isRightClick() && event.getClickedBlock() != null && !event.getPlayer().isSneaking()) {
-                    if (event.useInteractedBlock() != Event.Result.DENY) { //Not denied by plot plugin
-                        for (CustomBlockCompound cbcmp : GaldreenBlocksUnlimited.allCustomBlockCompounds) {
-                            for (CustomBlockCycle cbc : cbcmp.getBlockCyclesList()) {
-                                int i = 0;
-                                if (cbc.getCustomBlocks().size() > 1) {
-                                    for (CustomBlock cb : cbc.getCustomBlocks()) {
-                                        if (event.getClickedBlock().getBlockData().equals(cb.getGoalData())) {
-                                            event.setCancelled(true);
-                                            if (event.getHand() == EquipmentSlot.HAND) {
-                                                if (i == cbc.getCustomBlocks().size() - 1) {
-                                                    i = 0;
-                                                } else {
-                                                    i++;
-                                                }
-                                                event.getClickedBlock().setBlockData(cbc.getCustomBlocks().get(i).getGoalData(), false);
-                                            }
-                                            return;
-                                        } else {
-                                            i++;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        if (!((wgResult && bBuild) || canBypass)) {
+            return;
         }
+        if (!event.getPlayer().getInventory().getItemInMainHand().isSimilar(AddTool.tool)) {
+            return;
+        }
+        if (!(event.getAction().isRightClick() && event.getClickedBlock() != null && !event.getPlayer().isSneaking())) {
+            return;
+        }
+        if (event.useInteractedBlock() == Event.Result.DENY) { //Not denied by plot plugin
+            return;
+        }
+
+        BlockData newGoal = GaldreenBlocksUnlimited.cycles.get(event.getClickedBlock().getBlockData().toString());
+        if(newGoal == null){
+            return;
+        }
+        event.setCancelled(true);
+        event.getClickedBlock().setBlockData(newGoal, false);
+
     }
 }
+

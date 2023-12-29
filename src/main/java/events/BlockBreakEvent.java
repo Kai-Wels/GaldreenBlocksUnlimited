@@ -24,49 +24,41 @@ public class BlockBreakEvent implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBreak(org.bukkit.event.block.BlockBreakEvent event){
-
+        long time = System.nanoTime();
         //store block data of neighbours, if they are GaldreenBlocks and replace with barrier to prevent block updates
         BlockData[] storedNeighbours = new BlockData[6];
         boolean storedBlock = false;
         int i = 0;
         for(BlockFace bf : ReplaceTask.cartesian){
-            BlockData neighbourBD =  event.getBlock().getRelative(bf).getBlockData();
-            secondloop:
-            for(CustomBlockCompound cbcmp : GaldreenBlocksUnlimited.allCustomBlockCompounds){
-                for (CustomBlockCycle cbc : cbcmp.getBlockCyclesList()){
-                    for (CustomBlock cb : cbc.getCustomBlocks()){
-                        if(neighbourBD.equals(cb.getGoalData()) && cbcmp.isUpdatedByOtherBlocks()){
-                            storedNeighbours[i] = neighbourBD;
-                            event.getBlock().getRelative(bf).setType(Material.BARRIER,false);
-                            storedBlock = true;
-                            break secondloop;
-                        }
-                    }
+            String bd = GaldreenBlocksUnlimited.removeCraftBlock(event.getBlock().getRelative(bf).getBlockData().toString());
+            CustomBlockCompound comp = GaldreenBlocksUnlimited.goalToCompound.get(bd);
+            if (comp != null) {
+                if (comp.isUpdatedByOtherBlocks()) {
+                    storedNeighbours[i] = event.getBlock().getRelative(bf).getBlockData();
+                    event.getBlock().getRelative(bf).setType(Material.BARRIER, false);
+                    storedBlock = true;
                 }
             }
             i++;
-        }
-
-        //break behaviour
-        if (event.getPlayer().getGameMode() != GameMode.CREATIVE){
-            firstloop:
-            for(CustomBlockCompound cbcmp : GaldreenBlocksUnlimited.allCustomBlockCompounds){
-                for (CustomBlockCycle cbc : cbcmp.getBlockCyclesList()){
-                    for (CustomBlock cb : cbc.getCustomBlocks()){
-                        if(event.getBlock().getBlockData().equals(cb.getGoalData())){
-                            event.setCancelled(true);
-                            event.getBlock().setType(Material.AIR,false);
-                            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(),cbcmp.getItemToUse());
-                            break firstloop;
-                        }
-                    }
-                }
-            }
         }
 
         //schedule task to replace blocks again
         if(storedBlock){
             BukkitTask task = new ReplaceTask(plugin,storedNeighbours,event.getBlock().getWorld(),event.getBlock().getLocation()).runTaskLater(plugin, 1);
         }
+
+        //break behaviour
+        if (event.getPlayer().getGameMode() != GameMode.CREATIVE){
+            String bd = GaldreenBlocksUnlimited.removeCraftBlock(event.getBlock().getBlockData().toString());
+            CustomBlockCompound comp = GaldreenBlocksUnlimited.goalToCompound.get(bd);
+            if (comp == null){
+                return;
+            }
+
+            event.setCancelled(true);
+            event.getBlock().setType(Material.AIR,false);
+            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(),comp.getItemToUse());
+        }
+        System.out.println("Time to schedule Break:" + (System.nanoTime() - time));
     }
 }

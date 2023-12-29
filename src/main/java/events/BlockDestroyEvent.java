@@ -22,17 +22,11 @@ public class BlockDestroyEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDestroy(com.destroystokyo.paper.event.block.BlockDestroyEvent event){
 
-
-
-        for(CustomBlockCompound cbcmp : GaldreenBlocksUnlimited.allCustomBlockCompounds){
-            for (CustomBlockCycle cbc : cbcmp.getBlockCyclesList()){
-                for (CustomBlock cb : cbc.getCustomBlocks()){
-                    if(event.getBlock().getBlockData().equals(cb.getGoalData())){
-                        event.setCancelled(true);
-                        return;
-                    }
-                }
-            }
+        String bd = GaldreenBlocksUnlimited.removeCraftBlock(event.getBlock().getBlockData().toString());
+        CustomBlockCompound comp = GaldreenBlocksUnlimited.goalToCompound.get(bd);
+        if (comp != null){
+            event.setCancelled(true);
+            return;
         }
 
         for( ItemStack item: BlockCanBuildEvent.alwaysPlaceable){
@@ -41,8 +35,6 @@ public class BlockDestroyEvent implements Listener {
                 return;
             }
         }
-
-
 
     }
 

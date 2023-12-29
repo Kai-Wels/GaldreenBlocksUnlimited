@@ -16,6 +16,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.sql.Time;
+
 public class BlockPlaceEvent implements Listener {
 
     public JavaPlugin plugin;
@@ -26,50 +28,44 @@ public class BlockPlaceEvent implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlace(org.bukkit.event.block.BlockPlaceEvent event){
+        long time = System.nanoTime();
 
-        //store block data of neighbours, if they are GaldreenBlocks
+
+        //store block data of neighbours, if they are GaldreenBlocks and replace with barrier to prevent block updates
         BlockData[] storedNeighbours = new BlockData[6];
         boolean storedBlock = false;
         int i = 0;
         for(BlockFace bf : ReplaceTask.cartesian){
-            BlockData neighbourBD =  event.getBlock().getRelative(bf).getBlockData();
-            secondloop:
-            for(CustomBlockCompound cbcmp : GaldreenBlocksUnlimited.allCustomBlockCompounds){
-                for (CustomBlockCycle cbc : cbcmp.getBlockCyclesList()){
-                    for (CustomBlock cb : cbc.getCustomBlocks()){
-                        if(neighbourBD.equals(cb.getGoalData()) &&  cbcmp.isUpdatedByOtherBlocks()){
-                            storedNeighbours[i] = neighbourBD;
-                            event.getBlock().getRelative(bf).setType(Material.BARRIER,false);
-                            storedBlock = true;
-                            break secondloop;
-                        }
-                    }
+            CustomBlockCompound comp = GaldreenBlocksUnlimited.goalToCompound.get(event.getBlock().getRelative(bf).getBlockData().toString());
+            if (comp != null) {
+                if (comp.isUpdatedByOtherBlocks()) {
+                    storedNeighbours[i] = event.getBlock().getRelative(bf).getBlockData();
+                    event.getBlock().getRelative(bf).setType(Material.BARRIER, false);
+                    storedBlock = true;
                 }
             }
             i++;
-        }
-
-        //place CustomBlock
-        placeloop:
-        for(CustomBlockCompound cbcmp : GaldreenBlocksUnlimited.allCustomBlockCompounds){
-            if (itemStacksEqual(event.getPlayer().getInventory().getItem(event.getHand()),cbcmp.getItemToUse())) {
-                for (CustomBlockCycle cbc : cbcmp.getBlockCyclesList()){
-                    for (CustomBlock cb : cbc.getCustomBlocks()){
-                        for (BlockData bd : cb.getPlaceData()){
-                            if (event.getBlockPlaced().getBlockData().equals(bd) || bd.getMaterial() == Material.DIAMOND_BLOCK){
-                                event.getBlockPlaced().setBlockData(cb.getGoalData(),false);
-                                break placeloop;
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         //schedule task inorder to replace neighbouring blocks with correct ones again
         if(storedBlock){
             BukkitTask task = new ReplaceTask(plugin,storedNeighbours,event.getBlock().getWorld(),event.getBlock().getLocation()).runTaskLater(plugin, 1);
         }
+
+        //place CustomBlock
+        ItemStack inHand = event.getPlayer().getInventory().getItem(event.getHand()).clone();
+        inHand.setAmount(1);
+        BlockData goalState = GaldreenBlocksUnlimited.itemAndPlaceToGoal.get(inHand.toString() + event.getBlockPlaced().getBlockData().toString());
+        if(goalState == null){
+            goalState = GaldreenBlocksUnlimited.itemAndPlaceToGoal.get(event.getPlayer().getInventory().getItem(event.getHand()).toString() + GaldreenBlocksUnlimited.server.createBlockData("minecraft:diamond_block"));
+        }
+        if(goalState == null){
+            return;
+        }
+        event.getBlockPlaced().setBlockData(goalState,false);
+        System.out.println("Time to schedule place:" + (System.nanoTime() - time));
+
+
     }
 
     public static boolean itemStacksEqual(ItemStack is1,ItemStack is2){

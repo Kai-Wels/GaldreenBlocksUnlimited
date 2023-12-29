@@ -28,6 +28,7 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+        /*
         // /createGaldreenBlock x y z bool name
 
         //Layout
@@ -176,7 +177,7 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
 
 
 
-
+*/
         return false;
     }
 }

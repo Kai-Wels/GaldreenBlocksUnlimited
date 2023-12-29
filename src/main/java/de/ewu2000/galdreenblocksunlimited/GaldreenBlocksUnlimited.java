@@ -2,7 +2,9 @@ package de.ewu2000.galdreenblocksunlimited;
 
 import commands.*;
 import events.*;
+import it.unimi.dsi.fastutil.Hash;
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -10,17 +12,22 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public final class GaldreenBlocksUnlimited extends JavaPlugin {
-    public static ArrayList<CustomBlockCompound> allCustomBlockCompounds = new ArrayList<>();
+
+    //rework structure
+    public static HashMap<String,CustomBlockCompound> goalToCompound = new HashMap<>();
+    public static HashMap<String,BlockData> itemAndPlaceToGoal = new HashMap<>();
+    public static HashMap<String,BlockData> cycles = new HashMap<>();
+
     public static File dataFolder;
+
+    public static Server server;
 
     @Override
     public void onEnable() {
+        server = getServer();
         // Plugin startup logic
         this.getLogger().info("Registering Events");
         PluginManager manager = Bukkit.getPluginManager();
@@ -65,19 +72,43 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                 this.getLogger().info("  - " + subfolder.getName());
                 if (subfolder.isDirectory()) {
                     CustomBlockCompound cbcmp = new CustomBlockCompound();
+
+                    try {
+                        File itemFile = new File(subfolder, "item.txt");
+                        InputStream is = new FileInputStream(itemFile);
+                        byte[] cont = is.readAllBytes();
+                        is.close();
+                        ItemStack itemToUse = ItemStack.deserializeBytes(cont);
+                        cbcmp.setItemToUse(itemToUse);
+
+                        if(itemToUse.getItemMeta().lore() == null){
+                            cbcmp.setUpdatedByOtherBlocks(false);
+                        }else{
+                            cbcmp.setUpdatedByOtherBlocks(true);
+                        }
+                        this.getLogger().info("Found Item without error");
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                        return;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return;
+                    } catch (OutOfMemoryError e) {
+                        e.printStackTrace();
+                        return;
+                    }
+
                     //for every CustomBlockCyle
                     List<File> subsubfolderlist = Arrays.asList(subfolder.listFiles());
                     subsubfolderlist.sort(Comparator.comparing(File::getName));
                     for (File subsubFolder : subsubfolderlist) {
                         if (subsubFolder.isDirectory()) {
-                            CustomBlockCycle cbc = new CustomBlockCycle();
-                            CustomBlock[] blocks = new CustomBlock[subsubFolder.listFiles().length];
+                            ArrayList<BlockData> cylce = new ArrayList<>();
                             //for every CustomBlock
                             List<File> blockFolderList = Arrays.asList(subsubFolder.listFiles());
                             blockFolderList.sort(Comparator.comparing(File::getName));
                             for (File blockFolder : blockFolderList) {
-                                int cbIndex = Integer.parseInt(blockFolder.getName().substring(5, blockFolder.getName().length()));
-                                CustomBlock cb = new CustomBlock(getServer().createBlockData("minecraft:air"));
+                                BlockData goal = getServer().createBlockData("minecraft:air");
                                 BlockData[] placeBlocks = new BlockData[blockFolder.listFiles().length - 1];
                                 //for every Blockdata of a CustomBlock
                                 List<File> blockFileList = Arrays.asList(blockFolder.listFiles());
@@ -93,7 +124,9 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                                                 bdString += (char) cont;
                                             }
                                             is.close();
-                                            cb = new CustomBlock(getServer().createBlockData(bdString));
+                                            goalToCompound.put(bdString,cbcmp);
+                                            goal = getServer().createBlockData(bdString);
+                                            cylce.add(goal);
                                         } catch (FileNotFoundException e) {
                                             e.printStackTrace();
                                             return;
@@ -137,41 +170,25 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                                         }
                                     }
                                 }
-
-                                cb.setPlaceData(new ArrayList<>(Arrays.asList(placeBlocks)));
-                                blocks[cbIndex] = cb;
-
-                            }
-                            cbc.setCustomBlocks(new ArrayList<>(Arrays.asList(blocks)));
-                            cbcmp.getBlockCyclesList().add(cbc);
-
-                        } else if (subsubFolder.getName().equals("item.txt")) {
-                            try {
-                                InputStream is = new FileInputStream(subsubFolder);
-                                byte[] cont = is.readAllBytes();
-                                is.close();
-                                ItemStack itemToUse = ItemStack.deserializeBytes(cont);
-                                cbcmp.setItemToUse(itemToUse);
-
-                                if(itemToUse.getItemMeta().lore() == null){
-                                    cbcmp.setUpdatedByOtherBlocks(false);
-                                }else{
-                                    cbcmp.setUpdatedByOtherBlocks(true);
+                                for(BlockData bd : placeBlocks){
+                                    itemAndPlaceToGoal.put(cbcmp.getItemToUse().toString() + bd.toString(),goal);
                                 }
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                                return;
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                return;
-                            } catch (OutOfMemoryError e) {
-                                e.printStackTrace();
-                                return;
+
+
                             }
+
+                            this.getLogger().info("CycleCount:" + cylce.size());
+                            BlockData lastData = cylce.get(cylce.size()-1);
+                            for(BlockData bd : cylce){
+                                cycles.put(lastData.toString(),bd);
+                                lastData = bd;
+                            }
+
                         }
                     }
-                    GaldreenBlocksUnlimited.allCustomBlockCompounds.add(cbcmp);
                 }
+                this.getLogger().info(" -> Loaded gTC: " + goalToCompound.size() + ", iAPG:" + itemAndPlaceToGoal.size()+", cycles:" + cycles.size());
+                this.getLogger().info(" -> gTC: " + goalToCompound.keySet());
             }
         }
         this.getLogger().info("Loading Placeables");
@@ -233,5 +250,10 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+
+    public static String removeCraftBlock(String blockData){
+        return blockData.substring(15,blockData.length()-1);
     }
 }

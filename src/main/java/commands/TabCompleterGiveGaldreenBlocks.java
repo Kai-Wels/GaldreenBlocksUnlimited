@@ -22,7 +22,7 @@ public class TabCompleterGiveGaldreenBlocks implements TabCompleter {
         List<String> suggestions = new ArrayList<>();
         if(sender instanceof Player){
             PlainTextComponentSerializer serializer = PlainTextComponentSerializer.plainText();
-            for(CustomBlockCompound cbcmp: GaldreenBlocksUnlimited.allCustomBlockCompounds) {
+            for(CustomBlockCompound cbcmp: GaldreenBlocksUnlimited.goalToCompound.values()) {
                 if (cbcmp.getItemToUse().getItemMeta().hasDisplayName()){
                     String name = serializer.serialize(cbcmp.getItemToUse().displayName());
                     suggestions.add(name.substring(1,name.length() - 1));

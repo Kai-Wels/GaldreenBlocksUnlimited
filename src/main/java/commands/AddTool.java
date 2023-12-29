@@ -22,12 +22,15 @@ public class AddTool implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player){
             ItemStack itemInhand = ((Player)sender).getInventory().getItemInMainHand();
+            if (itemInhand == null){
+                return false;
+            }
             tool = itemInhand;
             //write to file
             File itemstackFile = new File(GaldreenBlocksUnlimited.dataFolder.getPath() + "/tools/changeTool.txt");
             try{
                 itemstackFile.createNewFile();
-                FileOutputStream oS = new FileOutputStream(itemstackFile);
+                FileOutputStream oS = new FileOutputStream(itemstackFile, false);
                 oS.write(itemInhand.serializeAsBytes());
                 oS.close();
                 ((Player)sender).sendMessage(Component.newline().content("Tool added successfully!"));

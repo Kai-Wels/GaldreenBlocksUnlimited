@@ -1,8 +1,9 @@
 name: GaldreenBlocksUnlimited
 version: '${project.version}'
+author: ewU2000
 main: de.ewu2000.galdreenblocksunlimited.GaldreenBlocksUnlimited
 api-version: 1.19
-description: Adds custom Blocks
+description: Adds custom Blocks on unused or seldom used BlockStates.
 commands:
   CreateGaldreenBlock:
     description: Creates a Galdreen Block
