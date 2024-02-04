@@ -8,9 +8,11 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -55,8 +57,16 @@ public class BlockBreakEvent implements Listener {
                     for (CustomBlock cb : cbc.getCustomBlocks()){
                         if(event.getBlock().getBlockData().equals(cb.getGoalData())){
                             event.setCancelled(true);
+                            if (cbcmp.getItemToUse().getItemMeta().hasDisplayName()){
+                                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(),cbcmp.getItemToUse());
+                            }else{
+                                event.getPlayer().sendMessage("Noname");
+                                for(ItemStack it : event.getBlock().getDrops(event.getPlayer().getInventory().getItemInMainHand(),event.getPlayer())){
+                                    event.getPlayer().sendMessage(it.getType().toString());
+                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(),it);
+                                }
+                            }
                             event.getBlock().setType(Material.AIR,false);
-                            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(),cbcmp.getItemToUse());
                             break firstloop;
                         }
                     }
