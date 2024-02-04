@@ -60,9 +60,7 @@ public class BlockBreakEvent implements Listener {
                             if (cbcmp.getItemToUse().getItemMeta().hasDisplayName()){
                                 event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(),cbcmp.getItemToUse());
                             }else{
-                                event.getPlayer().sendMessage("Noname");
                                 for(ItemStack it : event.getBlock().getDrops(event.getPlayer().getInventory().getItemInMainHand(),event.getPlayer())){
-                                    event.getPlayer().sendMessage(it.getType().toString());
                                     event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(),it);
                                 }
                             }
