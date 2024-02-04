@@ -14,7 +14,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class GiveGaldreenBlocksCommand implements CommandExecutor {
 
@@ -35,10 +39,14 @@ public class GiveGaldreenBlocksCommand implements CommandExecutor {
                     }
                     return false;
                 }else if (args.length == 0){ //drop all items
+                    Set<ItemStack> items = new HashSet<>();
                     for(CustomBlockCompound cbcmp: GaldreenBlocksUnlimited.goalToCompound.values()) {
                         if (cbcmp.getItemToUse().getItemMeta().hasDisplayName()){
-                            ((Player) commandSender).getWorld().dropItem(((Player) commandSender).getLocation(), cbcmp.getItemToUse());
+                            items.add(cbcmp.getItemToUse());
                         }
+                    }
+                    for(ItemStack i : items){
+                        ((Player) commandSender).getWorld().dropItem(((Player) commandSender).getLocation(), i);
                     }
                     return true;
                 }

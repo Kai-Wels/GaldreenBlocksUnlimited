@@ -21,14 +21,13 @@ import org.codehaus.plexus.util.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class CreateGaldreenBlockCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        /*
+
         // /createGaldreenBlock x y z bool name
 
         //Layout
@@ -66,36 +65,46 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
                     return false;
                 }
 
-
+                HashMap<String, Set<BlockData>> tempGoalToPlace = new HashMap<>();
 
                 int stop = 0;
                 int maxStop = 300;
                 CustomBlockCompound cbcmp = new CustomBlockCompound(is);
                 Location cycleLocation = startLocation.clone();
+                List<List<BlockData>> multipleCycles = new ArrayList<>();
                 while (cycleLocation.getBlock().getType() != Material.AIR && stop < maxStop) {
-                    CustomBlockCycle cbc = new CustomBlockCycle();
+                    List<BlockData> cycle = new ArrayList<>();
                     Location inCycleLocation = cycleLocation.clone();
                     while (inCycleLocation.getBlock().getType() != Material.AIR  && stop < maxStop) {
-                        CustomBlock cb = new CustomBlock(inCycleLocation.getBlock().getBlockData());
+                        BlockData goalData = inCycleLocation.getBlock().getBlockData();
                         Location inBlockDataLocation = inCycleLocation.clone();
                         inBlockDataLocation.add(2, 0, 0);
+                        tempGoalToPlace.put(goalData.toString(),new HashSet<>());
                         while (inBlockDataLocation.getBlock().getType() != Material.AIR  && stop < maxStop) {
-                            cb.getPlaceData().add(inBlockDataLocation.getBlock().getBlockData());
+                            GaldreenBlocksUnlimited.itemAndPlaceToGoal.put(cbcmp.getItemToUse().toString() + inBlockDataLocation.getBlock().getBlockData().toString(),goalData);
+                            tempGoalToPlace.get(goalData.toString()).add(inBlockDataLocation.getBlock().getBlockData());
                             inBlockDataLocation.add(2,0,0);
                             stop++;
                         }
-                        cbc.getCustomBlocks().add(cb);
+                        cycle.add(goalData);
+                        GaldreenBlocksUnlimited.goalToCompound.put(goalData.toString(),cbcmp);
                         inCycleLocation.add(0, 2, 0);
                         stop++;
                     }
-                    cbcmp.getBlockCyclesList().add(cbc);
+
+                    BlockData lastData = cycle.get(cycle.size()-1);
+                    for(BlockData bd : cycle){
+                        GaldreenBlocksUnlimited.cycles.put(lastData.toString(),bd);
+                        lastData = bd;
+                    }
+                    multipleCycles.add(cycle);
+
                     cycleLocation.add(0, 0, 2);
                     stop++;
                 }
 
 
 
-                GaldreenBlocksUnlimited.allCustomBlockCompounds.add(cbcmp);
 
                 //write to file
                 File compFolder = new File(GaldreenBlocksUnlimited.dataFolder.getPath() + "/customBlocks/" + itemName);
@@ -123,14 +132,14 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
                 }
 
                 int cycleCount= 0;
-                for (CustomBlockCycle cbc: cbcmp.getBlockCyclesList()){
+                for (List<BlockData> cycle: multipleCycles){
                     File cycleFolder = new File(compFolder.getPath() + "/Cycle" +cycleCount);
                     cycleFolder.mkdir();
 
 
 
                     int blockCount = 0;
-                    for(CustomBlock cb: cbc.getCustomBlocks()){
+                    for(BlockData goalData: cycle){
                         File blockFolder = new File(cycleFolder.getPath() + "/Block" + blockCount);
                         blockFolder.mkdir();
 
@@ -138,7 +147,7 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
                         try {
                             goalBlockData.createNewFile();
                             FileWriter fileWriter = new FileWriter(goalBlockData.getPath());
-                            fileWriter.write(cb.getGoalData().getAsString());
+                            fileWriter.write(goalData.getAsString());
                             fileWriter.close();
 
                         }catch (IOException e){
@@ -146,7 +155,7 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
                             return false;
                         }
                         int placeCount = 0;
-                        for(BlockData bd : cb.getPlaceData()){
+                        for(BlockData bd : tempGoalToPlace.get(goalData.toString())){
                             File placeBlockData = new File(blockFolder.getPath() + "/place" + placeCount + ".txt");
                             try {
                                 placeBlockData.createNewFile();
@@ -177,7 +186,7 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
 
 
 
-*/
+
         return false;
     }
 }
