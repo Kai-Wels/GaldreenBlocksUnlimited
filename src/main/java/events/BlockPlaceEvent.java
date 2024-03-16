@@ -52,7 +52,9 @@ public class BlockPlaceEvent implements Listener {
         //place CustomBlock
         placeloop:
         for(CustomBlockCompound cbcmp : GaldreenBlocksUnlimited.allCustomBlockCompounds){
+            System.out.println("=?");
             if (itemStacksEqual(event.getPlayer().getInventory().getItem(event.getHand()),cbcmp.getItemToUse())) {
+                System.out.println("=");
                 for (CustomBlockCycle cbc : cbcmp.getBlockCyclesList()){
                     for (CustomBlock cb : cbc.getCustomBlocks()){
                         for (BlockData bd : cb.getPlaceData()){
