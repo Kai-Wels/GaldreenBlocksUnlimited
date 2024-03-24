@@ -34,17 +34,17 @@ public class PlayerInteractEvent implements Listener {
         //check if towny allows building for this player
         boolean bBuild = PlayerCacheUtil.getCachePermission(event.getPlayer(), event.getClickedBlock().getLocation(), event.getClickedBlock().getType(), TownyPermission.ActionType.BUILD);
 
-        if ((wgResult && bBuild) ||canBypass) {
-            if (event.getPlayer().getInventory().getItemInMainHand().isSimilar(AddTool.tool)){
-                if (event.getAction().isRightClick() && event.getClickedBlock() != null && !event.getPlayer().isSneaking()) {
-                    if (event.useInteractedBlock() != Event.Result.DENY) { //Not denied by plot plugin
-                        for (CustomBlockCompound cbcmp : GaldreenBlocksUnlimited.allCustomBlockCompounds) {
-                            for (CustomBlockCycle cbc : cbcmp.getBlockCyclesList()) {
-                                int i = 0;
-                                if (cbc.getCustomBlocks().size() > 1) {
-                                    for (CustomBlock cb : cbc.getCustomBlocks()) {
-                                        if (event.getClickedBlock().getBlockData().equals(cb.getGoalData())) {
-                                            event.setCancelled(true);
+        if ((wgResult && bBuild) || canBypass) {
+            if (event.getAction().isRightClick() && event.getClickedBlock() != null && !event.getPlayer().isSneaking()) {
+                if (event.useInteractedBlock() != Event.Result.DENY) { //Not denied by plot plugin
+                    for (CustomBlockCompound cbcmp : GaldreenBlocksUnlimited.allCustomBlockCompounds) {
+                        for (CustomBlockCycle cbc : cbcmp.getBlockCyclesList()) {
+                            int i = 0;
+                            if (cbc.getCustomBlocks().size() > 1) {
+                                for (CustomBlock cb : cbc.getCustomBlocks()) {
+                                    if (event.getClickedBlock().getBlockData().equals(cb.getGoalData())) {
+                                        event.setCancelled(true);
+                                        if (event.getPlayer().getInventory().getItemInMainHand().isSimilar(AddTool.tool)) {
                                             if (event.getHand() == EquipmentSlot.HAND) {
                                                 if (i == cbc.getCustomBlocks().size() - 1) {
                                                     i = 0;
@@ -53,10 +53,10 @@ public class PlayerInteractEvent implements Listener {
                                                 }
                                                 event.getClickedBlock().setBlockData(cbc.getCustomBlocks().get(i).getGoalData(), false);
                                             }
-                                            return;
-                                        } else {
-                                            i++;
                                         }
+                                        return;
+                                    } else {
+                                        i++;
                                     }
                                 }
                             }
@@ -64,6 +64,7 @@ public class PlayerInteractEvent implements Listener {
                     }
                 }
             }
+
         }
     }
 }
