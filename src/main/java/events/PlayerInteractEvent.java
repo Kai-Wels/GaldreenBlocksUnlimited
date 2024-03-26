@@ -19,6 +19,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.EquipmentSlot;
 import com.palmergames.bukkit.towny.TownyAPI;
+import org.bukkit.plugin.RegisteredListener;
 
 public class PlayerInteractEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -43,7 +44,6 @@ public class PlayerInteractEvent implements Listener {
                             if (cbc.getCustomBlocks().size() > 1) {
                                 for (CustomBlock cb : cbc.getCustomBlocks()) {
                                     if (event.getClickedBlock().getBlockData().equals(cb.getGoalData())) {
-                                        event.setCancelled(true);
                                         if (event.getPlayer().getInventory().getItemInMainHand().isSimilar(AddTool.tool)) {
                                             if (event.getHand() == EquipmentSlot.HAND) {
                                                 if (i == cbc.getCustomBlocks().size() - 1) {
@@ -52,6 +52,11 @@ public class PlayerInteractEvent implements Listener {
                                                     i++;
                                                 }
                                                 event.getClickedBlock().setBlockData(cbc.getCustomBlocks().get(i).getGoalData(), false);
+                                            }
+                                            event.setCancelled(true);
+                                        } else if (event.getClickedBlock().getType().isInteractable()) {
+                                            if(!event.getPlayer().isSneaking()){
+                                                event.setCancelled(true);
                                             }
                                         }
                                         return;
