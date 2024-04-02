@@ -57,7 +57,8 @@ public class BlockPlaceEvent implements Listener {
         inHand.setAmount(1);
         BlockData goalState = GaldreenBlocksUnlimited.itemAndPlaceToGoal.get(inHand.toString() + event.getBlockPlaced().getBlockData().toString());
         if(goalState == null){
-            goalState = GaldreenBlocksUnlimited.itemAndPlaceToGoal.get(event.getPlayer().getInventory().getItem(event.getHand()).toString() + GaldreenBlocksUnlimited.server.createBlockData("minecraft:diamond_block"));
+            String search = inHand.toString() + GaldreenBlocksUnlimited.server.createBlockData("minecraft:diamond_block").toString();
+            goalState = GaldreenBlocksUnlimited.itemAndPlaceToGoal.get(search);
         }
         if(goalState == null){
             return;

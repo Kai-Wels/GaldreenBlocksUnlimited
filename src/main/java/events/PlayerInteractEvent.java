@@ -34,11 +34,13 @@ public class PlayerInteractEvent implements Listener {
 
         //check if towny allows building for this player
         boolean bBuild = PlayerCacheUtil.getCachePermission(event.getPlayer(), event.getClickedBlock().getLocation(), event.getClickedBlock().getType(), TownyPermission.ActionType.BUILD);
-
-        if (!((wgResult && bBuild) || canBypass)) {
+        if(event.getHand() == EquipmentSlot.OFF_HAND){
             return;
         }
         if (!event.getPlayer().getInventory().getItemInMainHand().isSimilar(AddTool.tool)) {
+            return;
+        }
+        if (!((wgResult && bBuild) || canBypass)) {
             return;
         }
         if (!(event.getAction().isRightClick() && event.getClickedBlock() != null && !event.getPlayer().isSneaking())) {
