@@ -6,6 +6,8 @@ import de.ewu2000.galdreenblocksunlimited.CustomBlockCycle;
 import de.ewu2000.galdreenblocksunlimited.GaldreenBlocksUnlimited;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.apache.maven.model.Plugin;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -52,10 +54,8 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
                 ItemStack is = ((Player) commandSender).getInventory().getItemInMainHand().clone();
                 if(args[3].equals("True")){
                     ItemMeta im = is.getItemMeta();
-                    im.displayName(Component.newline().content("§f" + itemName));
+                    im.displayName(Component.newline().content(itemName).color(TextColor.color(255,255,255)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE));
                     is.setAmount(1);
-                    ArrayList<String> lore = new ArrayList<>();
-                    lore.add("§9" + "Galdreen Block");
                     ArrayList<Component> loreList = new ArrayList<>();
                     loreList.add(Component.newline().content("§9" + "Galdreen Block"));
                     im.lore(loreList);
@@ -178,6 +178,7 @@ public class CreateGaldreenBlockCommand implements CommandExecutor {
                 }
 
                 ((Player)commandSender).sendMessage(Component.newline().content("Block added successfully!"));
+                GaldreenBlocksUnlimited.reload();
                 return true;
 
             }

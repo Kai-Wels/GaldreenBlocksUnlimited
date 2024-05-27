@@ -24,10 +24,12 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
     public static File dataFolder;
 
     public static Server server;
+    public static JavaPlugin plugin;
 
     @Override
     public void onEnable() {
         server = getServer();
+        plugin = this;
         // Plugin startup logic
         this.getLogger().info("Registering Events");
         PluginManager manager = Bukkit.getPluginManager();
@@ -36,6 +38,9 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
         manager.registerEvents(new BlockBreakEvent(this),this);
         manager.registerEvents(new PlayerInteractEvent(),this);
         manager.registerEvents(new BlockCanBuildEvent(),this);
+        manager.registerEvents(new InventoryClickEvent(),this);
+
+
 
         this.getLogger().info("Registering Commands");
         getCommand("createGaldreenBlock").setExecutor(new CreateGaldreenBlockCommand());
@@ -45,8 +50,22 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
         getCommand("addTool").setExecutor(new AddTool());
         getCommand("giveGaldreenTool").setExecutor(new GiveGaldreenTool());
 
+        reload();
+    }
 
-        dataFolder = this.getDataFolder();
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+    }
+
+    public static void reload(){
+
+        //reset first
+        goalToCompound.clear();
+        itemAndPlaceToGoal.clear();
+        cycles.clear();
+        //then load
+        dataFolder = plugin.getDataFolder();
         dataFolder.mkdir();
 
         File blockMainFolder = new File(dataFolder.getPath() + "/customBlocks");
@@ -61,7 +80,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
         if (!toolsFolder.exists()) {
             toolsFolder.mkdir();
         }
-        this.getLogger().info("Loading Blocks");
+        plugin.getLogger().info("Loading Blocks");
         {
 
 
@@ -69,7 +88,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
             List<File> subfolderlist = Arrays.asList(blockMainFolder.listFiles());
             subfolderlist.sort(Comparator.comparing(File::getName));
             for (File subfolder : subfolderlist) {
-                this.getLogger().info("  - " + subfolder.getName());
+                plugin.getLogger().info("  - " + subfolder.getName());
                 if (subfolder.isDirectory()) {
                     CustomBlockCompound cbcmp = new CustomBlockCompound();
 
@@ -86,7 +105,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                         }else{
                             cbcmp.setUpdatedByOtherBlocks(true);
                         }
-                        this.getLogger().info("Found Item without error");
+                        plugin.getLogger().info("Found Item without error");
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                         return;
@@ -108,7 +127,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                             List<File> blockFolderList = Arrays.asList(subsubFolder.listFiles());
                             blockFolderList.sort(Comparator.comparing(File::getName));
                             for (File blockFolder : blockFolderList) {
-                                BlockData goal = getServer().createBlockData("minecraft:air");
+                                BlockData goal = server.createBlockData("minecraft:air");
                                 BlockData[] placeBlocks = new BlockData[blockFolder.listFiles().length - 1];
                                 //for every Blockdata of a CustomBlock
                                 List<File> blockFileList = Arrays.asList(blockFolder.listFiles());
@@ -125,7 +144,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                                             }
                                             is.close();
                                             goalToCompound.put(bdString,cbcmp);
-                                            goal = getServer().createBlockData(bdString);
+                                            goal = server.createBlockData(bdString);
                                             cylce.add(goal);
                                         } catch (FileNotFoundException e) {
                                             e.printStackTrace();
@@ -151,7 +170,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                                                 bdString += (char) cont;
                                             }
                                             is.close();
-                                            placeBlocks[index] = getServer().createBlockData(bdString);
+                                            placeBlocks[index] = server.createBlockData(bdString);
                                         } catch (FileNotFoundException e) {
                                             e.printStackTrace();
                                             return;
@@ -177,7 +196,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
 
                             }
 
-                            this.getLogger().info("CycleCount:" + cylce.size());
+                            plugin.getLogger().info("CycleCount:" + cylce.size());
                             BlockData lastData = cylce.get(cylce.size()-1);
                             for(BlockData bd : cylce){
                                 cycles.put(lastData.toString(),bd);
@@ -187,11 +206,11 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                         }
                     }
                 }
-                this.getLogger().info(" -> Loaded gTC: " + goalToCompound.size() + ", iAPG:" + itemAndPlaceToGoal.size()+", cycles:" + cycles.size());
-                this.getLogger().info(" -> gTC: " + goalToCompound.keySet());
+                plugin.getLogger().info(" -> Loaded gTC: " + goalToCompound.size() + ", iAPG:" + itemAndPlaceToGoal.size()+", cycles:" + cycles.size());
+                plugin.getLogger().info(" -> gTC: " + goalToCompound.keySet());
             }
         }
-        this.getLogger().info("Loading Placeables");
+        plugin.getLogger().info("Loading Placeables");
         {
             List<File> placeableFilelist = Arrays.asList(placeableFolder.listFiles());
             placeableFilelist.sort(Comparator.comparing(File::getName));
@@ -203,7 +222,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                         is.close();
                         ItemStack itemToPlace = ItemStack.deserializeBytes(cont);
                         BlockCanBuildEvent.alwaysPlaceable.add(itemToPlace);
-                        this.getLogger().info("  - " + itemToPlace.getType() + "  [" + placeableFile.getName()  + "]");
+                        plugin.getLogger().info("  - " + itemToPlace.getType() + "  [" + placeableFile.getName()  + "]");
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                         return;
@@ -218,7 +237,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
             }
         }
 
-        this.getLogger().info("Loading Tools");
+        plugin.getLogger().info("Loading Tools");
         {
             List<File> toolsList = Arrays.asList(toolsFolder.listFiles());
             toolsList.sort(Comparator.comparing(File::getName));
@@ -230,7 +249,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                         is.close();
                         ItemStack tool = ItemStack.deserializeBytes(cont);
                         AddTool.tool = tool;
-                        this.getLogger().info("  - loaded tool");
+                        plugin.getLogger().info("  - loaded tool");
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                         return;
@@ -244,14 +263,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                 }
             }
         }
-
     }
-
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-    }
-
 
     public static String removeCraftBlock(String blockData){
         return blockData.substring(15,blockData.length()-1);
