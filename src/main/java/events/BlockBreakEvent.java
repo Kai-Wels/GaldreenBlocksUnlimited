@@ -11,6 +11,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -24,7 +25,6 @@ public class BlockBreakEvent implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBreak(org.bukkit.event.block.BlockBreakEvent event){
-        long time = System.nanoTime();
         //store block data of neighbours, if they are GaldreenBlocks and replace with barrier to prevent block updates
         BlockData[] storedNeighbours = new BlockData[6];
         boolean storedBlock = false;
@@ -48,17 +48,24 @@ public class BlockBreakEvent implements Listener {
         }
 
         //break behaviour
-        if (event.getPlayer().getGameMode() != GameMode.CREATIVE){
-            String bd = GaldreenBlocksUnlimited.removeCraftBlock(event.getBlock().getBlockData().toString());
-            CustomBlockCompound comp = GaldreenBlocksUnlimited.goalToCompound.get(bd);
-            if (comp == null){
-                return;
-            }
-
-            event.setCancelled(true);
-            event.getBlock().setType(Material.AIR,false);
-            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(),comp.getItemToUse());
+        if (event.getPlayer().getGameMode() == GameMode.CREATIVE){
+            return;
         }
-        System.out.println("Time to schedule Break:" + (System.nanoTime() - time));
+
+        String bd = GaldreenBlocksUnlimited.removeCraftBlock(event.getBlock().getBlockData().toString());
+        CustomBlockCompound comp = GaldreenBlocksUnlimited.goalToCompound.get(bd);
+        if (comp == null){
+            return;
+        }
+        event.setCancelled(true);
+        if(comp.isUpdatedByOtherBlocks() == false){
+            for(ItemStack it : event.getBlock().getDrops(event.getPlayer().getInventory().getItemInMainHand(),event.getPlayer())){
+                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(),it);
+            }
+        }else{
+            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(),comp.getItemToUse());
+
+        }
+        event.getBlock().setType(Material.AIR,false);
     }
 }

@@ -16,7 +16,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.sql.Time;
 
 public class BlockPlaceEvent implements Listener {
 
@@ -28,7 +27,6 @@ public class BlockPlaceEvent implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlace(org.bukkit.event.block.BlockPlaceEvent event){
-        long time = System.nanoTime();
 
 
         //store block data of neighbours, if they are GaldreenBlocks and replace with barrier to prevent block updates
@@ -64,7 +62,6 @@ public class BlockPlaceEvent implements Listener {
             return;
         }
         event.getBlockPlaced().setBlockData(goalState,false);
-        System.out.println("Time to schedule place:" + (System.nanoTime() - time));
 
 
     }

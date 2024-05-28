@@ -15,9 +15,13 @@ This plugin is specifically created for the german server Galdreen, but may also
   ![Logo](./Doc/PlaceAble.gif "AddPlaceable")
   *Using the /addplaceable command blocks can be defined as placeable under any circumstance. This allows for more flexibility with blocks like flowers.*
 
+- Makes debugsticks work in survival (except for Customblocks and blacklisted blocks)
+
 ## Usage
 - **AddPlaceable**
     This command must be executed with a block in hand. After execution this block is now placeable anywhere.
+- **AddBlackListMaterial**
+  The command pattern is ``/createGaldreenBlock <x-coord> <y-coord> <z-coord>``. The block that is that location will be added to a blacklist and can't be changed with the debugstick as a result. (Survival non-op only)
 - **AddTool**
     This command defines the item in the hand of the executer as the tool used to switch between different block states in a cycle.
 - **CreateGaldreenBlock**

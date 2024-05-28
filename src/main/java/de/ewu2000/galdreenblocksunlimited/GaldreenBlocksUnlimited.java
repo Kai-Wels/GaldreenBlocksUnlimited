@@ -4,6 +4,7 @@ import commands.*;
 import events.*;
 import it.unimi.dsi.fastutil.Hash;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
@@ -12,6 +13,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public final class GaldreenBlocksUnlimited extends JavaPlugin {
@@ -20,6 +22,8 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
     public static HashMap<String,CustomBlockCompound> goalToCompound = new HashMap<>();
     public static HashMap<String,BlockData> itemAndPlaceToGoal = new HashMap<>();
     public static HashMap<String,BlockData> cycles = new HashMap<>();
+
+    public static HashSet<Material> blackListDebugStick = new HashSet<>();
 
     public static File dataFolder;
 
@@ -39,6 +43,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
         manager.registerEvents(new PlayerInteractEvent(),this);
         manager.registerEvents(new BlockCanBuildEvent(),this);
         manager.registerEvents(new InventoryClickEvent(),this);
+        manager.registerEvents(new OnJoinEvent(),this);
 
 
 
@@ -47,6 +52,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
         getCommand("giveGaldreenBlocks").setExecutor(new GiveGaldreenBlocksCommand());
         getCommand("giveGaldreenBlocks").setTabCompleter(new TabCompleterGiveGaldreenBlocks());
         getCommand("addPlaceable").setExecutor(new AddPlaceable());
+        getCommand("addBlacklistMaterial").setExecutor(new AddBlacklistMaterial());
         getCommand("addTool").setExecutor(new AddTool());
         getCommand("giveGaldreenTool").setExecutor(new GiveGaldreenTool());
 
@@ -64,6 +70,7 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
         goalToCompound.clear();
         itemAndPlaceToGoal.clear();
         cycles.clear();
+        blackListDebugStick.clear();
         //then load
         dataFolder = plugin.getDataFolder();
         dataFolder.mkdir();
@@ -79,6 +86,10 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
         File toolsFolder = new File(dataFolder.getPath() + "/tools");
         if (!toolsFolder.exists()) {
             toolsFolder.mkdir();
+        }
+        File debugFolder = new File(dataFolder.getPath() + "/debugStick");
+        if (!debugFolder.exists()) {
+            debugFolder.mkdir();
         }
         plugin.getLogger().info("Loading Blocks");
         {
@@ -260,6 +271,25 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                         e.printStackTrace();
                         return;
                     }
+                }
+            }
+        }
+
+        plugin.getLogger().info("Loading DebugStickConfig");
+        {
+            List<File> debugList = Arrays.asList(debugFolder.listFiles());
+            for ( File f : debugList){
+                try {
+                    InputStream is = new FileInputStream(f);
+                    byte[] cont = is.readAllBytes();
+                    is.close();
+
+                    String material = new String(cont, StandardCharsets.UTF_8);
+                    blackListDebugStick.add(Material.valueOf(material));
+                    plugin.getLogger().info("  - loaded material: " + material);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return;
                 }
             }
         }

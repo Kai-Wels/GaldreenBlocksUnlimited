@@ -1,5 +1,7 @@
 commands\AddTool.class
 events\BlockBreakEvent.class
+events\OnJoinEvent.class
+events\InventoryClickEvent.class
 events\ReplaceTask.class
 de\ewu2000\galdreenblocksunlimited\CustomBlockCycle.class
 commands\AddPlaceable.class
@@ -10,6 +12,7 @@ events\BlockPlaceEvent.class
 events\PlayerInteractEvent.class
 de\ewu2000\galdreenblocksunlimited\GaldreenBlocksUnlimited.class
 events\BlockCanBuildEvent.class
+commands\AddBlacklistMaterial.class
 commands\CreateGaldreenBlockCommand.class
 de\ewu2000\galdreenblocksunlimited\CustomBlock.class
 events\BlockDestroyEvent.class

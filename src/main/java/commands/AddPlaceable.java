@@ -25,8 +25,6 @@ public class AddPlaceable implements CommandExecutor {
             ItemStack itemInhand = ((Player)commandSender).getInventory().getItemInMainHand();
             BlockCanBuildEvent.alwaysPlaceable.add(itemInhand);
 
-            int id = (new File(GaldreenBlocksUnlimited.dataFolder.getPath() + "/placeable")).listFiles().length;
-
             //write to file
             File itemstackFile = new File(GaldreenBlocksUnlimited.dataFolder.getPath() + "/placeable/" + itemInhand.getType().toString() + itemInhand.hashCode()  + ".txt");
             try{
