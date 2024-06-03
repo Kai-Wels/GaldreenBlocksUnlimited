@@ -1,5 +1,5 @@
 name: GaldreenBlocksUnlimited
-version: '2.0'
+version: '2.1'
 author: ewU2000
 main: de.ewu2000.galdreenblocksunlimited.GaldreenBlocksUnlimited
 api-version: 1.19
@@ -15,6 +15,10 @@ commands:
   AddPlaceable:
     description: Adds a block to the list of blocks that can be placed in non vanilla locations.
     usage: /addPlaceable !!Hold Item in hand!!
+    permission: op
+  AddBlackListMaterial:
+    description: Adds a block to the list of blocks that can't be modified by the debugstick (survival & non-op)
+    usage: /addBlackListMaterial !!Hold Item in hand!!
     permission: op
   AddTool:
     description: Changes the tool used for switching GaldreenBlocks to the item in hand.

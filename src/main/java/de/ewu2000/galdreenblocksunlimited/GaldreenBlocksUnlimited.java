@@ -218,7 +218,6 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
                     }
                 }
                 plugin.getLogger().info(" -> Loaded gTC: " + goalToCompound.size() + ", iAPG:" + itemAndPlaceToGoal.size()+", cycles:" + cycles.size());
-                plugin.getLogger().info(" -> gTC: " + goalToCompound.keySet());
             }
         }
         plugin.getLogger().info("Loading Placeables");
