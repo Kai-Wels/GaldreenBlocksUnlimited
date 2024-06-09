@@ -12,7 +12,7 @@ public class InventoryClickEvent  implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onAnvil(org.bukkit.event.inventory.InventoryClickEvent event){
-        if(!event.getClickedInventory().getType().equals(InventoryType.ANVIL)){
+        if(event.getClickedInventory().getType() == null || !event.getClickedInventory().getType().equals(InventoryType.ANVIL)){
             return;
         }
         if(event.getSlotType() != InventoryType.SlotType.RESULT) {
