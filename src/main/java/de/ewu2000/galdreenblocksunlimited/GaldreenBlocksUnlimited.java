@@ -2,13 +2,14 @@ package de.ewu2000.galdreenblocksunlimited;
 
 import commands.*;
 import events.*;
-import it.unimi.dsi.fastutil.Hash;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -296,5 +297,11 @@ public final class GaldreenBlocksUnlimited extends JavaPlugin {
 
     public static String removeCraftBlock(String blockData){
         return blockData.substring(15,blockData.length()-1);
+    }
+
+
+    public static TextComponent createChatMessage(String text) {
+        TextComponent tc =  Component.text(" [",NamedTextColor.GRAY).append(Component.text("GaldreenBlocksUnlimited",NamedTextColor.AQUA).append(Component.text("] ",NamedTextColor.GRAY)));
+        return tc.append(Component.text(text,NamedTextColor.GRAY));
     }
 }

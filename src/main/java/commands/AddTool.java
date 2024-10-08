@@ -20,29 +20,35 @@ public class AddTool implements CommandExecutor {
     public static ItemStack tool = null;
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (sender instanceof Player){
-            ItemStack itemInhand = ((Player)sender).getInventory().getItemInMainHand();
-            if (itemInhand == null){
-                return false;
-            }
-            tool = itemInhand;
-            //write to file
-            File itemstackFile = new File(GaldreenBlocksUnlimited.dataFolder.getPath() + "/tools/changeTool.txt");
-            try{
-                itemstackFile.createNewFile();
-                FileOutputStream oS = new FileOutputStream(itemstackFile, false);
-                oS.write(itemInhand.serializeAsBytes());
-                oS.close();
-                ((Player)sender).sendMessage(Component.newline().content("Tool added successfully!"));
-                return true;
-            } catch (FileNotFoundException e){
-                e.printStackTrace();
-                return false;
-            } catch  (IOException e){
-                e.printStackTrace();
-                return false;
-            }
+        if (!(sender instanceof Player)) {
+            return false;
         }
-       return false;
+        Player player = (Player) sender; 
+        
+        ItemStack itemInhand = player.getInventory().getItemInMainHand();
+        if (itemInhand == null){
+            player.sendMessage(GaldreenBlocksUnlimited.createChatMessage("Du musst einen Gegenstand in der Hand halten!"));
+            return true;
+        }
+        tool = itemInhand;
+        //write to file
+        File itemstackFile = new File(GaldreenBlocksUnlimited.dataFolder.getPath() + "/tools/changeTool.txt");
+        try{
+            itemstackFile.createNewFile();
+            FileOutputStream oS = new FileOutputStream(itemstackFile, false);
+            oS.write(itemInhand.serializeAsBytes());
+            oS.close();
+            player.sendMessage(GaldreenBlocksUnlimited.createChatMessage("Werkzeug hinzugefügt!"));
+            return true;
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+            player.sendMessage(GaldreenBlocksUnlimited.createChatMessage("Es ist ein Fehler aufgetreten: Datei nicht gefunden!"));
+            return true;
+        } catch  (IOException e){
+            e.printStackTrace();
+            player.sendMessage(GaldreenBlocksUnlimited.createChatMessage("Es ist ein Fehler aufgetreten: IOException!"));
+            return true;
+        }
+        
     }
 }

@@ -21,12 +21,13 @@ import java.nio.charset.StandardCharsets;
 public class AddBlacklistMaterial implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        // /addPlaceable x y z
+        // /addblacklistmaterial x y z
         if(!(commandSender instanceof Player)){
             return false;
         }
+        Player player = (Player) commandSender;
         if(strings.length != 3){
-            ((Player)commandSender).sendMessage(Component.newline().content("Blacklistitem not added! You must specify a location!"));
+            player.sendMessage(GaldreenBlocksUnlimited.createChatMessage("Nicht zur Blacklist hinzugefügt! Du musst eine Koordinate angeben!"));
             return false;
         }
         Location loc;
@@ -34,13 +35,13 @@ public class AddBlacklistMaterial implements CommandExecutor {
             loc = new Location(((Player) commandSender).getWorld(), Integer.parseInt(strings[0]), Integer.parseInt(strings[1]), Integer.parseInt(strings[2]));
         }
         catch (NumberFormatException e){
-            ((Player)commandSender).sendMessage(Component.newline().content("Blacklistitem not added! YOne of the arguments wasn't an integer"));
+            player.sendMessage(GaldreenBlocksUnlimited.createChatMessage("Nicht zur Blacklist hinzugefügt! Eines der Argumente war keine Ganzzahl."));
             return false;
         }
-        Material mat = ((Player)commandSender).getWorld().getBlockData(loc).getMaterial();
+        Material mat = player.getWorld().getBlockData(loc).getMaterial();
 
         if(mat == Material.AIR){
-            ((Player)commandSender).sendMessage(Component.newline().content("BlackListMaterial not added! No block at coords."));
+            player.sendMessage(GaldreenBlocksUnlimited.createChatMessage("Nicht zur Blacklist hinzugefügt! An der Koordinate war kein Block."));
             return false;
         }
 
@@ -53,7 +54,7 @@ public class AddBlacklistMaterial implements CommandExecutor {
             FileOutputStream oS = new FileOutputStream(itemstackFile);
             oS.write(mat.toString().getBytes(StandardCharsets.UTF_8));
             oS.close();
-            ((Player)commandSender).sendMessage(Component.newline().content("Blacklistitem added successfully!"));
+            player.sendMessage(GaldreenBlocksUnlimited.createChatMessage("Block erfolgreich hinzugefügt!"));
             return true;
         } catch (FileNotFoundException e){
             e.printStackTrace();

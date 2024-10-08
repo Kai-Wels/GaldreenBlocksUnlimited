@@ -13,12 +13,20 @@ public class GiveGaldreenTool implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        if (commandSender instanceof Player){
-            if (((Player)commandSender).getGameMode() == GameMode.CREATIVE || commandSender.isOp()){
-                    ((Player) commandSender).getInventory().addItem(AddTool.tool);
-                return true;
-            }
+        if (!(commandSender instanceof Player)) {
+            return false;
         }
-        return false;
+        Player player = (Player) commandSender;
+
+        if (player.getGameMode() != GameMode.CREATIVE || !commandSender.isOp()) {
+            player.sendMessage(GaldreenBlocksUnlimited.createChatMessage("Befehl kann nur als OP oder im Kreativ ausgeführt werden."));
+            return true;
+        }
+        if(AddTool.tool == null){
+            player.sendMessage(GaldreenBlocksUnlimited.createChatMessage("Es wurde noch kein Werkzeug definiert!"));
+            return true;
+        }
+        player.getInventory().addItem(AddTool.tool);
+        return true;
     }
 }
