@@ -18,7 +18,7 @@ public class GiveGaldreenTool implements CommandExecutor {
         }
         Player player = (Player) commandSender;
 
-        if (player.getGameMode() != GameMode.CREATIVE || !commandSender.isOp()) {
+        if (player.getGameMode() != GameMode.CREATIVE && !commandSender.isOp()) {
             player.sendMessage(GaldreenBlocksUnlimited.createChatMessage("Befehl kann nur als OP oder im Kreativ ausgeführt werden."));
             return true;
         }
