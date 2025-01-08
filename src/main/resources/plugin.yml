@@ -28,4 +28,4 @@ commands:
   GiveGaldreenTool:
     description: Gives the player the tool used to change GaldreenBlocks.
     usage: /giveGaldreenTool
-depend: [WorldGuard,Towny]
+depend: [WorldGuard]
