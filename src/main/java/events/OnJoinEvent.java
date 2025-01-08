@@ -9,7 +9,7 @@ import org.bukkit.permissions.PermissionAttachment;
 public class OnJoinEvent implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onAnvil(org.bukkit.event.player.PlayerJoinEvent event){
+    public void onJoin(org.bukkit.event.player.PlayerJoinEvent event){
         PermissionAttachment attachment = event.getPlayer().addAttachment(GaldreenBlocksUnlimited.plugin);
         attachment.setPermission("minecraft.debugstick.always",true);
     }

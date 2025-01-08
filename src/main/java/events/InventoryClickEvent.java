@@ -23,8 +23,6 @@ public class InventoryClickEvent  implements Listener {
             return;
         }
 
-
-        System.out.println(((TextComponent)event.getCurrentItem().getItemMeta().lore().get(0)).content());
         if(((TextComponent)event.getCurrentItem().getItemMeta().lore().get(0)).content().equals(((TextComponent) ((CustomBlockCompound)GaldreenBlocksUnlimited.goalToCompound.values().toArray()[0]).getItemToUse().getItemMeta().lore().get(0)).content())){
             event.setCancelled(true);
         }

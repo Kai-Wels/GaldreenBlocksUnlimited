@@ -28,6 +28,7 @@ public class BlockCanBuildEvent implements Listener {
         for(ItemStack is: alwaysPlaceable){
             if(BlockPlaceEvent.itemStacksEqual(usedItem,is)){
                 event.setBuildable(true);
+                return;
             }
         }
 
